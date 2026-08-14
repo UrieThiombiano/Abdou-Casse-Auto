@@ -22,7 +22,6 @@
                 <x-public-nav-link :href="route('home')" :active="request()->routeIs('home')">Accueil</x-public-nav-link>
                 <x-public-nav-link :href="route('pieces-neuves')" :active="request()->routeIs('pieces-neuves')">Pièces neuves</x-public-nav-link>
                 <x-public-nav-link :href="route('occasion')" :active="request()->routeIs('occasion')">Occasion</x-public-nav-link>
-                <x-public-nav-link href="{{ route('home') }}#qui-sommes-nous">Qui sommes-nous</x-public-nav-link>
                 <x-public-nav-link :href="route('contact')" :active="request()->routeIs('contact')">Contact</x-public-nav-link>
             </nav>
 
@@ -43,7 +42,6 @@
             <x-public-nav-link :href="route('home')" class="block">Accueil</x-public-nav-link>
             <x-public-nav-link :href="route('pieces-neuves')" class="block">Pièces neuves</x-public-nav-link>
             <x-public-nav-link :href="route('occasion')" class="block">Occasion</x-public-nav-link>
-            <x-public-nav-link href="{{ route('home') }}#qui-sommes-nous" class="block">Qui sommes-nous</x-public-nav-link>
             <x-public-nav-link :href="route('contact')" class="block">Contact</x-public-nav-link>
             <a href="{{ route('commander') }}" class="btn-primary btn-block">Commander une pièce</a>
             <a href="tel:+226{{ str_replace(' ', '', config('company.phones')[0]) }}" class="btn-secondary btn-block">{{ config('company.phones')[0] }}</a>

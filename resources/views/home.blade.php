@@ -79,24 +79,4 @@
         </div>
     </section>
 
-    {{-- Qui sommes-nous --}}
-    <section id="qui-sommes-nous" class="max-w-6xl mx-auto px-4 py-16 scroll-mt-20">
-        <h2 class="mb-4">Qui sommes-nous</h2>
-        <p class="text-neutral-600 max-w-3xl mb-10">
-            {{ config('company.name') }} est une entreprise de dépannage automobile 24h/24 basée à {{ config('company.city') }},
-            aujourd'hui reconnue pour son activité de casse auto. Nous digitalisons la vente de nos pièces détachées neuves
-            et d'occasion pour vous offrir un accès simple et rapide au bon prix — payé uniquement à la livraison.
-        </p>
-        <div class="grid sm:grid-cols-2 gap-5">
-            <div class="card elev-sm p-6">
-                <h4 class="mb-2">Dépannage</h4>
-                <p class="text-sm text-neutral-600">Remorquage et assistance automobile 24h/24, un service de confiance depuis longtemps à {{ config('company.city') }}.</p>
-            </div>
-            <div class="card elev-sm p-6">
-                <h4 class="mb-2">Pièces détachées</h4>
-                <p class="text-sm text-neutral-600">Un large choix de pièces neuves et d'occasion, sélectionnées et vérifiées avant mise en vente.</p>
-            </div>
-        </div>
-    </section>
-
 </x-layouts::app>
