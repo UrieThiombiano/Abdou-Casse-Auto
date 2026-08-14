@@ -12,7 +12,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Necessaire derriere le proxy de Codespaces (et la plupart des
+        // hebergements mutualises) pour que Laravel lise correctement
+        // X-Forwarded-Host/Proto et genere les bonnes URLs (assets, liens).
+        $middleware->trustProxies(at: '*');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
