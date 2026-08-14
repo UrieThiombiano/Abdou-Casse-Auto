@@ -80,6 +80,7 @@
         </div>
         <div class="border-t border-neutral-800 px-4 py-4 text-center text-xs text-neutral-500">
             &copy; {{ date('Y') }} {{ config('company.name') }} — Paiement à la livraison uniquement. Aucun prix n'est affiché en ligne.
+            · <a href="{{ route('login') }}" class="hover:text-accent">Connexion admin</a>
         </div>
     </footer>
 
