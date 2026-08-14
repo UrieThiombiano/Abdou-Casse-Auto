@@ -38,9 +38,16 @@
 
             <div>
                 <h4 class="mb-3">Localisation</h4>
-                <div class="bg-surface aspect-[4/3] flex items-center justify-center text-neutral-400 text-sm text-center p-6">
-                    Carte Google Maps à intégrer dès confirmation des coordonnées GPS par {{ config('company.name') }}.
-                </div>
+                <a
+                    href="https://maps.app.goo.gl/3RYMiXAhtHuDLkRHA"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="bg-surface aspect-[4/3] flex flex-col items-center justify-center gap-3 text-center p-6 border border-neutral-200 hover:border-accent transition-colors"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-accent"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                    <span class="font-bold text-ink">{{ config('company.name') }} — {{ config('company.city') }}</span>
+                    <span class="btn-primary">Voir sur Google Maps</span>
+                </a>
             </div>
         </div>
     </div>
