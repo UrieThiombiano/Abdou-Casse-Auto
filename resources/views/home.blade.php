@@ -12,7 +12,7 @@
                 <form action="{{ route('pieces-neuves') }}" method="GET" class="bg-white p-4 flex flex-col sm:flex-row gap-3 max-w-xl">
                     <div class="field flex-1 !mb-0">
                         <label for="hero-marque" class="!text-neutral-500">Marque</label>
-                        <select id="hero-marque" name="marque" class="input !bg-surface">
+                        <select id="hero-marque" name="marque" class="input !bg-surface !text-ink">
                             <option value="">Toutes les marques</option>
                             @foreach ($brands as $brand)
                                 <option value="{{ $brand->id }}">{{ $brand->name }}</option>
