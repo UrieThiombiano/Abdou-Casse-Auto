@@ -2,10 +2,13 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import AuthLayout from '../../components/AuthLayout'
 import { supabase } from '../../lib/supabaseClient'
+import { adminTitle, useDocumentTitle } from '../../lib/title'
 
 // Supabase envoie l'utilisateur ici avec un lien de recuperation deja
 // echange en session active (voir onAuthStateChange PASSWORD_RECOVERY).
 export default function ResetPassword() {
+    useDocumentTitle(adminTitle('Nouveau mot de passe'))
+
     const navigate = useNavigate()
     const [password, setPassword] = useState('')
     const [passwordConfirmation, setPasswordConfirmation] = useState('')

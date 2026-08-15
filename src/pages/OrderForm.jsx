@@ -1,10 +1,14 @@
 import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { supabase } from '../lib/supabaseClient'
+import { company } from '../lib/company'
+import { useDocumentTitle } from '../lib/title'
 
 const CURRENT_YEAR = new Date().getFullYear()
 
 export default function OrderForm() {
+    useDocumentTitle(`Commander une pièce — ${company.name}`)
+
     const [searchParams] = useSearchParams()
     const pieceId = searchParams.get('piece')
 

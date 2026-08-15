@@ -2,8 +2,11 @@ import { useState } from 'react'
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom'
 import AuthLayout from '../../components/AuthLayout'
 import { useAuth } from '../../context/AuthContext'
+import { adminTitle, useDocumentTitle } from '../../lib/title'
 
 export default function Login() {
+    useDocumentTitle(adminTitle('Connexion'))
+
     const { user, signIn } = useAuth()
     const navigate = useNavigate()
     const location = useLocation()

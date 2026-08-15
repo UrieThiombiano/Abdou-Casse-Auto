@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { supabase } from '../../lib/supabaseClient'
 import { ORDER_STATUSES, orderStatusLabel } from '../../lib/orderStatus'
 import Pagination from '../../components/Pagination'
+import { adminTitle, useDocumentTitle } from '../../lib/title'
 
 const PER_PAGE = 15
 
@@ -62,6 +63,8 @@ async function exportOrdersCsv() {
 }
 
 export default function OrdersManager() {
+    useDocumentTitle(adminTitle('Commandes'))
+
     const [orders, setOrders] = useState([])
     const [total, setTotal] = useState(0)
     const [page, setPage] = useState(1)

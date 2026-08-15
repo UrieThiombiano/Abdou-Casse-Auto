@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabaseClient'
 import { photoUrl } from '../lib/imageUploader'
 import PhotoPlaceholder from '../components/PhotoPlaceholder'
 import Pagination from '../components/Pagination'
+import { publicTitle, useDocumentTitle } from '../lib/title'
 
 const PER_PAGE = 12
 const CURRENT_YEAR = new Date().getFullYear()
@@ -80,6 +81,7 @@ export default function Catalog({ category }) {
     }
 
     const title = category === 'neuf' ? 'Pièces neuves' : "Occasion — France au revoir"
+    useDocumentTitle(publicTitle(title))
 
     return (
         <div>

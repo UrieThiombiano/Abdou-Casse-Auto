@@ -1,8 +1,11 @@
 import { useState } from 'react'
 import AuthLayout from '../../components/AuthLayout'
 import { supabase } from '../../lib/supabaseClient'
+import { adminTitle, useDocumentTitle } from '../../lib/title'
 
 export default function ForgotPassword() {
+    useDocumentTitle(adminTitle('Mot de passe oublié'))
+
     const [email, setEmail] = useState('')
     const [status, setStatus] = useState(null)
     const [error, setError] = useState(null)

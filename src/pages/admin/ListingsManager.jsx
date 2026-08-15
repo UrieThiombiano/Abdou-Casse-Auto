@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { supabase } from '../../lib/supabaseClient'
 import { storeCompressedPhoto, deleteStoredPhoto, photoUrl } from '../../lib/imageUploader'
 import Pagination from '../../components/Pagination'
+import { adminTitle, useDocumentTitle } from '../../lib/title'
 
 const PER_PAGE = 15
 const CURRENT_YEAR = new Date().getFullYear()
@@ -19,6 +20,8 @@ const EMPTY_FORM = {
 }
 
 export default function ListingsManager() {
+    useDocumentTitle(adminTitle('Annonces'))
+
     const [brands, setBrands] = useState([])
     const [listings, setListings] = useState([])
     const [total, setTotal] = useState(0)

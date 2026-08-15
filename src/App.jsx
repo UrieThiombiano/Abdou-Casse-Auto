@@ -9,6 +9,7 @@ import Catalog from './pages/Catalog'
 import ProductDetail from './pages/ProductDetail'
 import OrderForm from './pages/OrderForm'
 import Contact from './pages/Contact'
+import NotFound from './pages/NotFound'
 
 import Login from './pages/admin/Login'
 import ForgotPassword from './pages/admin/ForgotPassword'
@@ -29,6 +30,7 @@ export default function App() {
                         <Route path="/produit/:id" element={<ProductDetail />} />
                         <Route path="/commander" element={<OrderForm />} />
                         <Route path="/contact" element={<Contact />} />
+                        <Route path="*" element={<NotFound />} />
                     </Route>
 
                     <Route path="/admin/login" element={<Login />} />

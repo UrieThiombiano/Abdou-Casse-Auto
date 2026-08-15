@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabaseClient'
 import { photoUrl } from '../lib/imageUploader'
 import PhotoPlaceholder from '../components/PhotoPlaceholder'
 import WhatsappLink from '../components/WhatsappLink'
+import { publicTitle, useDocumentTitle } from '../lib/title'
 
 export default function ProductDetail() {
     const { id } = useParams()
@@ -43,6 +44,8 @@ export default function ProductDetail() {
             navigate('/', { replace: true })
         }
     }, [listing, navigate])
+
+    useDocumentTitle(listing ? publicTitle(listing.title) : undefined)
 
     if (!listing) {
         return <div className="max-w-6xl mx-auto px-4 py-16 text-center text-neutral-500">Chargement…</div>

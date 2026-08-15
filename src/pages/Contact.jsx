@@ -2,8 +2,11 @@ import { useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
 import { company, telHref } from '../lib/company'
 import WhatsappLink from '../components/WhatsappLink'
+import { publicTitle, useDocumentTitle } from '../lib/title'
 
 export default function Contact() {
+    useDocumentTitle(publicTitle('Contact'))
+
     const [form, setForm] = useState({ name: '', message: '' })
     const [errors, setErrors] = useState({})
     const [status, setStatus] = useState(null)

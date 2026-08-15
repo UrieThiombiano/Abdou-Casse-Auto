@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../../lib/supabaseClient'
 import { orderStatusLabel } from '../../lib/orderStatus'
+import { adminTitle, useDocumentTitle } from '../../lib/title'
 
 const CHART_W = 600
 const CHART_H = 160
@@ -24,6 +25,8 @@ function formatDateTime(iso) {
 }
 
 export default function Dashboard() {
+    useDocumentTitle(adminTitle('Tableau de bord'))
+
     const [stats, setStats] = useState(null)
     const [error, setError] = useState(false)
 

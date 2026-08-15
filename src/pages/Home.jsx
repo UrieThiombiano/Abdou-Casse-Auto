@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabaseClient'
 import { company, telHref } from '../lib/company'
+import { publicTitle, useDocumentTitle } from '../lib/title'
 
 const REASSURANCE_ITEMS = [
     { label: 'Service 24h/24', text: 'Dépannage et assistance à toute heure' },
@@ -11,6 +12,8 @@ const REASSURANCE_ITEMS = [
 ]
 
 export default function Home() {
+    useDocumentTitle(publicTitle('Accueil'))
+
     const [brands, setBrands] = useState([])
     const [brand, setBrand] = useState('')
     const navigate = useNavigate()
