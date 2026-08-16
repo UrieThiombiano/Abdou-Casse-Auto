@@ -25,6 +25,7 @@ export default function PublicLayout() {
                         </PublicNavLink>
                         <PublicNavLink to="/pieces-neuves">Pièces neuves</PublicNavLink>
                         <PublicNavLink to="/occasion">Occasion</PublicNavLink>
+                        <PublicNavLink to="/demander-une-piece">Demander une pièce</PublicNavLink>
                         <PublicNavLink to="/contact">Contact</PublicNavLink>
                     </nav>
 
@@ -57,6 +58,9 @@ export default function PublicLayout() {
                         </PublicNavLink>
                         <PublicNavLink to="/occasion" className="block">
                             Occasion
+                        </PublicNavLink>
+                        <PublicNavLink to="/demander-une-piece" className="block">
+                            Demander une pièce
                         </PublicNavLink>
                         <PublicNavLink to="/contact" className="block">
                             Contact
@@ -109,6 +113,11 @@ export default function PublicLayout() {
                             <li>
                                 <Link to="/occasion" className="hover:text-accent">
                                     Occasion — France au revoir
+                                </Link>
+                            </li>
+                            <li>
+                                <Link to="/demander-une-piece" className="hover:text-accent">
+                                    Demander une pièce
                                 </Link>
                             </li>
                             <li>

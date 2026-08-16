@@ -19,6 +19,9 @@ police Archivo, boutons carrés, animations) ont été repris à l'identique.
 - Commande d'une pièce : formulaire sans paiement en ligne (paiement à la
   livraison uniquement), pré-rempli si on vient d'une fiche produit
 - Contact : formulaire + coordonnées + lien Google Maps
+- Avez-vous cette pièce ? : formulaire public avec photo jointe (upload
+  anonyme vers un bucket dédié, limité à 8 Mo / images uniquement), envoyé
+  comme une commande
 
 **Espace admin** (`/admin/login`, aucune inscription publique)
 - Tableau de bord : compteurs, graphique commandes sur 14 jours, dernières commandes
@@ -27,6 +30,8 @@ police Archivo, boutons carrés, animations) ont été repris à l'identique.
   `ImageUploader` PHP), filtres, pagination (15/page)
 - Gestion des commandes : filtre par statut, détail, changement de statut,
   lien WhatsApp direct, export CSV (Excel) généré côté navigateur
+- Gestion des demandes de pièces : mêmes fonctionnalités que les commandes,
+  avec affichage de la photo jointe par le visiteur
 
 ## Stack
 
@@ -48,7 +53,8 @@ dans **Project Settings → API** :
 
 Dans **SQL Editor** de Supabase, exécutez dans l'ordre :
 1. `supabase/schema.sql` — tables, sécurité (RLS), bucket de stockage `listing-photos`
-2. `supabase/seed.sql` — marques + annonces de démonstration (optionnel, à supprimer en prod)
+2. `supabase/part_requests.sql` — table + bucket `part-request-photos` pour "Avez-vous cette pièce ?"
+3. `supabase/seed.sql` — marques + annonces de démonstration (optionnel, à supprimer en prod)
 
 ### 3. Configurer les variables d'environnement
 
@@ -98,6 +104,10 @@ d'hébergement, et à ajouter une règle de réécriture SPA (toutes les routes
 /*  /index.html  200
 ```
 
+Pour un hébergement Apache classique (mutualisé type cPanel), le fichier
+`public/.htaccess` (copié dans `dist/` au build) fait la même chose via
+`mod_rewrite`.
+
 ## Différences avec la version PHP
 
 - **Auth "se souvenir de moi"** : Supabase conserve la session automatiquement
@@ -119,7 +129,8 @@ src/
   pages/          Pages publiques
   pages/admin/    Pages admin (login, dashboard, annonces, commandes)
 supabase/
-  schema.sql      Tables + RLS + bucket de stockage
-  seed.sql        Marques + annonces de démonstration
+  schema.sql        Tables + RLS + bucket de stockage
+  part_requests.sql Table + bucket "Avez-vous cette pièce ?"
+  seed.sql          Marques + annonces de démonstration
   create-admin.mjs  Script de création du compte admin
 ```

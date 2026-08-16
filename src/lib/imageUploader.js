@@ -1,4 +1,4 @@
-import { supabase, LISTING_PHOTOS_BUCKET } from './supabaseClient'
+import { supabase, LISTING_PHOTOS_BUCKET, PART_REQUEST_PHOTOS_BUCKET } from './supabaseClient'
 
 // Redimensionne et compresse les photos d'annonces avant upload (exigence
 // performance : images legeres pour la 3G), equivalent de App\Support\ImageUploader.
@@ -43,4 +43,23 @@ export function photoUrl(path) {
 
 export async function deleteStoredPhoto(path) {
     await supabase.storage.from(LISTING_PHOTOS_BUCKET).remove([path])
+}
+
+// Photo jointe par un visiteur a une demande de piece — upload public, sans authentification.
+export async function storePartRequestPhoto(file) {
+    const blob = await compressToWebp(file)
+    const path = `${crypto.randomUUID()}.webp`
+
+    const { error } = await supabase.storage.from(PART_REQUEST_PHOTOS_BUCKET).upload(path, blob, {
+        contentType: 'image/webp',
+        upsert: false,
+    })
+
+    if (error) throw error
+
+    return path
+}
+
+export function partRequestPhotoUrl(path) {
+    return supabase.storage.from(PART_REQUEST_PHOTOS_BUCKET).getPublicUrl(path).data.publicUrl
 }

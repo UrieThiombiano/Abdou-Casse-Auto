@@ -87,7 +87,7 @@ export default function Home() {
             </section>
 
             <section className="max-w-6xl mx-auto px-4 py-16">
-                <div className="grid gap-5 sm:grid-cols-3">
+                <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
                     <Link
                         to="/pieces-neuves"
                         className="card elev-sm border-t-4 border-accent p-6 hover:shadow-lg transition-shadow"
@@ -114,6 +114,15 @@ export default function Home() {
                         <h3 className="mb-2">Commander</h3>
                         <p className="text-sm text-neutral-600 mb-4">Demandez la pièce qu'il vous faut, sans paiement en ligne.</p>
                         <span className="btn-ghost">Commander →</span>
+                    </Link>
+                    <Link
+                        to="/demander-une-piece"
+                        className="card elev-sm border-t-4 border-accent p-6 hover:shadow-lg transition-shadow"
+                        style={{ animation: 'fadeInUp .5s .3s ease both' }}
+                    >
+                        <h3 className="mb-2">Vous ne trouvez pas votre pièce ?</h3>
+                        <p className="text-sm text-neutral-600 mb-4">Envoyez-nous une photo, on vérifie la disponibilité pour vous.</p>
+                        <span className="btn-ghost">Envoyer une photo →</span>
                     </Link>
                 </div>
             </section>

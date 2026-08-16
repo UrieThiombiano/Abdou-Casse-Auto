@@ -35,6 +35,7 @@ export default function AdminLayout() {
                     <AdminNavLink to="/admin/dashboard">Tableau de bord</AdminNavLink>
                     <AdminNavLink to="/admin/annonces">Annonces</AdminNavLink>
                     <AdminNavLink to="/admin/commandes">Commandes</AdminNavLink>
+                    <AdminNavLink to="/admin/demandes">Demandes de pièces</AdminNavLink>
                 </nav>
 
                 <div className="p-4 border-t border-neutral-800">
