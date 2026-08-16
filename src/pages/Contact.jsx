@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabaseClient'
 import { company, telHref } from '../lib/company'
 import WhatsappLink from '../components/WhatsappLink'
 import { publicTitle, useDocumentTitle } from '../lib/title'
+import { trackEvent } from '../lib/analytics'
 
 export default function Contact() {
     useDocumentTitle(publicTitle('Contact'))
@@ -55,7 +56,7 @@ export default function Contact() {
                     <ul className="space-y-1 text-neutral-700 mb-6">
                         {company.phones.map((phone) => (
                             <li key={phone}>
-                                <a href={telHref(phone)} className="hover:text-accent">
+                                <a href={telHref(phone)} onClick={() => trackEvent('phone_click')} className="hover:text-accent">
                                     {phone}
                                 </a>
                             </li>
@@ -105,6 +106,7 @@ export default function Contact() {
                         href={company.mapsUrl}
                         target="_blank"
                         rel="noopener noreferrer"
+                        onClick={() => trackEvent('location_click')}
                         className="bg-surface aspect-[4/3] flex flex-col items-center justify-center gap-3 text-center p-6 border border-neutral-200 hover:border-accent transition-colors"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-accent">

@@ -8,7 +8,6 @@ import Home from './pages/Home'
 import Catalog from './pages/Catalog'
 import ProductDetail from './pages/ProductDetail'
 import OrderForm from './pages/OrderForm'
-import PartRequestForm from './pages/PartRequestForm'
 import Contact from './pages/Contact'
 import NotFound from './pages/NotFound'
 
@@ -31,7 +30,6 @@ export default function App() {
                         <Route path="/occasion" element={<Catalog category="occasion" />} />
                         <Route path="/produit/:id" element={<ProductDetail />} />
                         <Route path="/commander" element={<OrderForm />} />
-                        <Route path="/demander-une-piece" element={<PartRequestForm />} />
                         <Route path="/contact" element={<Contact />} />
                         <Route path="*" element={<NotFound />} />
                     </Route>

@@ -5,6 +5,7 @@ import { photoUrl } from '../lib/imageUploader'
 import PhotoPlaceholder from '../components/PhotoPlaceholder'
 import WhatsappLink from '../components/WhatsappLink'
 import { publicTitle, useDocumentTitle } from '../lib/title'
+import { trackEvent } from '../lib/analytics'
 
 export default function ProductDetail() {
     const { id } = useParams()
@@ -123,7 +124,7 @@ export default function ProductDetail() {
                     </div>
 
                     <div className="flex flex-col sm:flex-row gap-3">
-                        <Link to={`/commander?piece=${listing.id}`} className="btn-primary">
+                        <Link to={`/commander?piece=${listing.id}`} onClick={() => trackEvent('order_click')} className="btn-primary">
                             Commander cette pièce
                         </Link>
                         <WhatsappLink text={`Bonjour, je suis intéressé(e) par : ${listing.title}`} />

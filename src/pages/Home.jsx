@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabaseClient'
 import { company, telHref } from '../lib/company'
 import { publicTitle, useDocumentTitle } from '../lib/title'
+import { trackEvent } from '../lib/analytics'
 
 const REASSURANCE_ITEMS = [
     { label: 'Service 24h/24', text: 'Dépannage et assistance à toute heure' },
@@ -79,7 +80,11 @@ export default function Home() {
                         <p className="text-neutral-400 text-sm mb-4">
                             Une urgence sur la route ? Notre équipe de dépannage reste joignable à toute heure.
                         </p>
-                        <a href={telHref(company.phones[0])} className="btn-secondary !border-neutral-600 !text-white btn-block">
+                        <a
+                            href={telHref(company.phones[0])}
+                            onClick={() => trackEvent('phone_click')}
+                            className="btn-secondary !border-neutral-600 !text-white btn-block"
+                        >
                             {company.phones[0]}
                         </a>
                     </div>
@@ -87,7 +92,7 @@ export default function Home() {
             </section>
 
             <section className="max-w-6xl mx-auto px-4 py-16">
-                <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+                <div className="grid gap-5 sm:grid-cols-3">
                     <Link
                         to="/pieces-neuves"
                         className="card elev-sm border-t-4 border-accent p-6 hover:shadow-lg transition-shadow"
@@ -108,21 +113,13 @@ export default function Home() {
                     </Link>
                     <Link
                         to="/commander"
+                        onClick={() => trackEvent('order_click')}
                         className="card elev-sm border-t-4 border-neutral-800 p-6 hover:shadow-lg transition-shadow"
                         style={{ animation: 'fadeInUp .5s .2s ease both' }}
                     >
                         <h3 className="mb-2">Commander</h3>
                         <p className="text-sm text-neutral-600 mb-4">Demandez la pièce qu'il vous faut, sans paiement en ligne.</p>
                         <span className="btn-ghost">Commander →</span>
-                    </Link>
-                    <Link
-                        to="/demander-une-piece"
-                        className="card elev-sm border-t-4 border-accent p-6 hover:shadow-lg transition-shadow"
-                        style={{ animation: 'fadeInUp .5s .3s ease both' }}
-                    >
-                        <h3 className="mb-2">Vous ne trouvez pas votre pièce ?</h3>
-                        <p className="text-sm text-neutral-600 mb-4">Envoyez-nous une photo, on vérifie la disponibilité pour vous.</p>
-                        <span className="btn-ghost">Envoyer une photo →</span>
                     </Link>
                 </div>
             </section>

@@ -45,6 +45,7 @@ export default function Dashboard() {
                     { count: activeListings },
                     { data: recentOrders },
                     { data: latestOrders },
+                    { data: analytics },
                 ] = await Promise.all([
                     supabase.from('orders').select('*', { count: 'exact', head: true }),
                     supabase.from('orders').select('*', { count: 'exact', head: true }).eq('status', 'traitee'),
@@ -56,6 +57,7 @@ export default function Dashboard() {
                         .select('*, brand:brands(*)')
                         .order('created_at', { ascending: false })
                         .limit(8),
+                    supabase.rpc('analytics_summary', { days: 30 }),
                 ])
 
                 const ordersByDay = {}
@@ -75,6 +77,8 @@ export default function Dashboard() {
                     value: ordersByDay[formatDay(d)] ?? 0,
                 }))
 
+                const summary = analytics?.[0] ?? {}
+
                 setStats({
                     totalOrders: totalOrders ?? 0,
                     treatedOrders: treatedOrders ?? 0,
@@ -82,6 +86,10 @@ export default function Dashboard() {
                     activeListings: activeListings ?? 0,
                     chartPoints,
                     latestOrders: latestOrders ?? [],
+                    siteVisits: summary.site_visits ?? 0,
+                    phoneClicks: summary.phone_clicks ?? 0,
+                    orderClicks: summary.order_clicks ?? 0,
+                    locationClicks: summary.location_clicks ?? 0,
                 })
             } catch {
                 setError(true)
@@ -112,6 +120,28 @@ export default function Dashboard() {
     return (
         <div>
             <h1 className="mb-6">Tableau de bord</h1>
+
+            <div className="flex items-center justify-between mb-4">
+                <h4>Fréquentation du site — 30 derniers jours</h4>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-8">
+                <div className="card elev-sm p-5">
+                    <p className="text-xs uppercase font-bold text-neutral-500 mb-1">Visites du site</p>
+                    <p className="text-3xl font-extrabold">{stats.siteVisits}</p>
+                </div>
+                <div className="card elev-sm p-5">
+                    <p className="text-xs uppercase font-bold text-neutral-500 mb-1">Clics contact / téléphone</p>
+                    <p className="text-3xl font-extrabold">{stats.phoneClicks}</p>
+                </div>
+                <div className="card elev-sm p-5">
+                    <p className="text-xs uppercase font-bold text-neutral-500 mb-1">Clics "Commander une pièce"</p>
+                    <p className="text-3xl font-extrabold">{stats.orderClicks}</p>
+                </div>
+                <div className="card elev-sm p-5">
+                    <p className="text-xs uppercase font-bold text-neutral-500 mb-1">Clics localisation</p>
+                    <p className="text-3xl font-extrabold">{stats.locationClicks}</p>
+                </div>
+            </div>
 
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-8">
                 <div className="card elev-sm p-5">

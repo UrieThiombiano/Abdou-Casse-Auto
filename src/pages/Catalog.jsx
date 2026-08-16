@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabaseClient'
 import { photoUrl } from '../lib/imageUploader'
 import PhotoPlaceholder from '../components/PhotoPlaceholder'
 import Pagination from '../components/Pagination'
+import PartRequestButton from '../components/PartRequestButton'
 import { publicTitle, useDocumentTitle } from '../lib/title'
 
 const PER_PAGE = 12
@@ -181,6 +182,8 @@ export default function Catalog({ category }) {
                     </>
                 )}
             </div>
+
+            <PartRequestButton />
         </div>
     )
 }
