@@ -3,10 +3,12 @@ import { Link, useSearchParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { supabase } from '../lib/supabaseClient'
 import { photoUrl } from '../lib/imageUploader'
+import { company, telHref } from '../lib/company'
 import PhotoPlaceholder from '../components/PhotoPlaceholder'
 import Pagination from '../components/Pagination'
 import PartRequestButton from '../components/PartRequestButton'
 import AvailabilityBadge from '../components/AvailabilityBadge'
+import WhatsappLink from '../components/WhatsappLink'
 import Reveal from '../components/Reveal'
 import { publicTitle, useDocumentTitle } from '../lib/title'
 
@@ -172,9 +174,37 @@ export default function Catalog({ category }) {
 
                         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                             {listings.length === 0 ? (
-                                <p className="col-span-full text-neutral-500 py-12 text-center">
-                                    Aucune annonce ne correspond à ces critères pour le moment.
-                                </p>
+                                <div className="col-span-full">
+                                    <Reveal className="bg-surface border border-neutral-200 p-6 sm:p-10 text-center max-w-2xl mx-auto">
+                                        <p className="text-lg font-extrabold mb-2">
+                                            😕 Vous ne trouvez pas la pièce que vous cherchez ?
+                                        </p>
+                                        <p className="text-neutral-600 mb-6">
+                                            Pas de souci ! Aucune annonce ne correspond à ces critères pour le moment,
+                                            mais venez faire un tour à notre magasin à {company.city.split(',')[0]} — 🏬
+                                            nous avons bien plus de pièces en rayon que ce qui est publié sur ce site.
+                                        </p>
+
+                                        <div className="bg-accent-100 border border-accent-200 p-4 text-sm text-left mb-6">
+                                            <p className="font-bold mb-1">🌍 Introuvable au Burkina Faso ? On vous la trouve quand même !</p>
+                                            <p className="text-neutral-700">
+                                                Grâce à notre réseau de partenaires à l'étranger, nous commandons
+                                                spécialement pour vous les pièces indisponibles sur place. Appelez-nous
+                                                ou écrivez-nous, on s'occupe du reste ✈️🔧
+                                            </p>
+                                        </div>
+
+                                        <div className="flex flex-wrap justify-center gap-3">
+                                            <Link to="/commander" className="btn-primary">
+                                                Commander une pièce
+                                            </Link>
+                                            <WhatsappLink />
+                                            <a href={telHref(company.phones[0])} className="btn-secondary">
+                                                📞 {company.phones[0]}
+                                            </a>
+                                        </div>
+                                    </Reveal>
+                                </div>
                             ) : (
                                 listings.map((listing, i) => {
                                     const sortedPhotos = [...(listing.photos ?? [])].sort((a, b) => a.position - b.position)
