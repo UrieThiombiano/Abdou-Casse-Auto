@@ -126,9 +126,9 @@ export default function Home() {
                     </div>
 
                     <motion.div
-                        initial={{ opacity: 0, y: 20, scale: 0.96 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        transition={{ duration: 0.6, delay: 0.2 }}
+                        initial={{ opacity: 0, x: 80 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
                         className="bg-neutral-800/90 backdrop-blur-sm p-6 border-t-4 border-accent"
                     >
                         <div className="badge-circle w-14 h-14 bg-accent text-white font-extrabold text-xs text-center mb-4 flex items-center justify-center animate-[ctaPulse_2.4s_ease-in-out_infinite]">
