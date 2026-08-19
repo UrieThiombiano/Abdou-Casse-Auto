@@ -53,13 +53,13 @@ export default function OrderBook() {
             { count: bassinko },
             { count: exterieure },
         ] = await Promise.all([
-            supabase.from('manual_orders').select('*', { count: 'exact', head: true }).in('status', PENDING_STATUSES),
-            supabase.from('manual_orders').select('*', { count: 'exact', head: true }).eq('status', 'livree'),
-            supabase.from('manual_orders').select('*', { count: 'exact', head: true }).eq('status', 'annulee'),
+            supabase.from('manual_orders').select('id', { count: 'exact' }).in('status', PENDING_STATUSES),
+            supabase.from('manual_orders').select('id', { count: 'exact' }).eq('status', 'livree'),
+            supabase.from('manual_orders').select('id', { count: 'exact' }).eq('status', 'annulee'),
             supabase.from('manual_orders').select('total_amount, deposit_amount').neq('status', 'annulee'),
             supabase
                 .from('manual_orders')
-                .select('*', { count: 'exact', head: true })
+                .select('id', { count: 'exact' })
                 .lt('estimated_delivery_date', today)
                 .not('status', 'in', '(livree,annulee)'),
             supabase
@@ -69,12 +69,12 @@ export default function OrderBook() {
                 .gte('updated_at', monthStart.toISOString()),
             supabase
                 .from('manual_orders')
-                .select('*', { count: 'exact', head: true })
+                .select('id', { count: 'exact' })
                 .eq('source_type', 'entrepot_bassinko')
                 .neq('status', 'annulee'),
             supabase
                 .from('manual_orders')
-                .select('*', { count: 'exact', head: true })
+                .select('id', { count: 'exact' })
                 .eq('source_type', 'commande_exterieure')
                 .neq('status', 'annulee'),
         ])

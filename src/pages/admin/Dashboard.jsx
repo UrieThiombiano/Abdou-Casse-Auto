@@ -47,10 +47,10 @@ export default function Dashboard() {
                     { data: latestOrders },
                     { data: analytics },
                 ] = await Promise.all([
-                    supabase.from('orders').select('*', { count: 'exact', head: true }),
-                    supabase.from('orders').select('*', { count: 'exact', head: true }).eq('status', 'traitee'),
-                    supabase.from('orders').select('*', { count: 'exact', head: true }).eq('status', 'en_attente'),
-                    supabase.from('listings').select('*', { count: 'exact', head: true }).eq('is_active', true),
+                    supabase.from('orders').select('id', { count: 'exact' }),
+                    supabase.from('orders').select('id', { count: 'exact' }).eq('status', 'traitee'),
+                    supabase.from('orders').select('id', { count: 'exact' }).eq('status', 'en_attente'),
+                    supabase.from('listings').select('id', { count: 'exact' }).eq('is_active', true),
                     supabase.from('orders').select('created_at').gte('created_at', start.toISOString()),
                     supabase
                         .from('orders')
