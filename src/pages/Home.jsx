@@ -63,14 +63,11 @@ export default function Home() {
                             À juste prix, sans mauvaise surprise
                         </motion.span>
 
-                        <motion.h1
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.6, delay: 0.08 }}
+                        <Typewriter
+                            as="h1"
                             className="text-white text-4xl sm:text-5xl mb-4"
-                        >
-                            Trouvez exactement la pièce qui manque à votre véhicule
-                        </motion.h1>
+                            text="Trouvez exactement la pièce qui manque à votre véhicule"
+                        />
 
                         <motion.p
                             initial={{ opacity: 0, y: 20 }}
