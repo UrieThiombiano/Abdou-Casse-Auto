@@ -66,8 +66,9 @@ export default function OrderForm() {
         if (!form.customer_phone.trim()) e.customer_phone = 'Le téléphone est requis.'
         else if (form.customer_phone.length > 30) e.customer_phone = '30 caractères maximum.'
 
-        if (!form.vin.trim()) e.vin = 'Le VIN / n° de châssis est requis.'
-        else if (form.vin.length > 50) e.vin = '50 caractères maximum.'
+        if (!form.vin.trim()) e.vin = 'Le VIN / n° de châssis est obligatoire.'
+        else if (form.vin.trim().length !== 17)
+            e.vin = `Le VIN doit comporter exactement 17 caractères (${form.vin.trim().length}/17 actuellement).`
 
         if (!form.brand_id) e.brand_id = 'La marque est requise.'
 
@@ -204,8 +205,26 @@ export default function OrderForm() {
                 </div>
 
                 <div className="field">
-                    <label htmlFor="vin">VIN / N° de châssis *</label>
-                    <input id="vin" className="input" value={form.vin} onChange={(e) => set('vin', e.target.value)} required />
+                    <div className="flex items-baseline justify-between gap-2">
+                        <label htmlFor="vin">VIN / N° de châssis *</label>
+                        <span className={`text-xs font-bold ${form.vin.trim().length === 17 ? 'text-accent' : 'text-neutral-400'}`}>
+                            {form.vin.trim().length}/17
+                        </span>
+                    </div>
+                    <input
+                        id="vin"
+                        className="input"
+                        value={form.vin}
+                        onChange={(e) => set('vin', e.target.value)}
+                        minLength={17}
+                        maxLength={17}
+                        required
+                    />
+                    <p className="text-xs text-neutral-500 mt-1">
+                        Ce numéro identifie formellement le véhicule et conditionne la conformité de la pièce livrée.
+                        Merci de le vérifier scrupuleusement avant l'envoi : toute erreur de saisie invalidera la
+                        commande.
+                    </p>
                     {errors.vin && <p className="text-sm text-red-600 mt-1">{errors.vin}</p>}
                 </div>
 
@@ -253,7 +272,7 @@ export default function OrderForm() {
 
                 {errors.form && <p className="text-sm text-red-600">{errors.form}</p>}
 
-                <button type="submit" className="btn-primary btn-block" disabled={submitting}>
+                <button type="submit" className="btn-primary btn-block" disabled={submitting || form.vin.trim().length !== 17}>
                     {submitting ? 'Envoi…' : 'Envoyer la demande'}
                 </button>
             </Reveal>
