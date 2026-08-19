@@ -205,13 +205,14 @@ export default function Home() {
                         <div className="absolute inset-y-0 right-0 w-16 sm:w-32 bg-gradient-to-l from-neutral-900 to-transparent z-10" />
                         <div className="flex w-max animate-[marquee_28s_linear_infinite] hover:[animation-play-state:paused]">
                             {[...brands, ...brands].map((b, i) => (
-                                <span
+                                <Link
                                     key={`${b.id}-${i}`}
-                                    className="shrink-0 mx-3 px-6 py-3 border border-neutral-700 text-neutral-200 flex items-center gap-3"
+                                    to={`/pieces-neuves?marque=${b.id}`}
+                                    className="shrink-0 mx-3 px-6 py-3 border border-neutral-700 text-neutral-200 flex items-center gap-3 hover:border-accent hover:text-white transition-colors"
                                 >
                                     <BrandLogo name={b.name} className="w-7 h-7 shrink-0" />
                                     <span className="font-extrabold uppercase tracking-wide text-sm">{b.name}</span>
-                                </span>
+                                </Link>
                             ))}
                         </div>
                     </div>

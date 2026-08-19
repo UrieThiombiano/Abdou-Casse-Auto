@@ -101,6 +101,9 @@ export default function Catalog({ category }) {
     const headerBg = HEADER_BACKGROUNDS[category]
     useDocumentTitle(publicTitle(title))
 
+    const otherCategoryPath = category === 'neuf' ? '/occasion' : '/pieces-neuves'
+    const otherCategoryLabel = category === 'neuf' ? 'occasion' : 'neuf'
+
     return (
         <div>
             <div className="relative overflow-hidden bg-neutral-900 text-white">
@@ -156,9 +159,16 @@ export default function Catalog({ category }) {
                     <div className="text-sm text-neutral-500 mb-6">Chargement…</div>
                 ) : (
                     <>
-                        <p className="text-sm text-neutral-600 mb-6">
-                            {total} résultat{total > 1 ? 's' : ''}
-                        </p>
+                        <div className="flex items-center justify-between flex-wrap gap-3 mb-6">
+                            <p className="text-sm text-neutral-600">
+                                {total} résultat{total > 1 ? 's' : ''}
+                            </p>
+                            {brand && (
+                                <Link to={`${otherCategoryPath}?marque=${brand}`} className="btn-ghost">
+                                    Voir aussi en {otherCategoryLabel} →
+                                </Link>
+                            )}
+                        </div>
 
                         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                             {listings.length === 0 ? (
