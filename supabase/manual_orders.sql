@@ -29,42 +29,7 @@ drop policy if exists "manual_orders_admin_all" on manual_orders;
 create policy "manual_orders_admin_all" on manual_orders for all
     using (auth.role() = 'authenticated') with check (auth.role() = 'authenticated');
 
--- Carnet de commandes : vue unifiee commandes du site + commandes hors site,
--- utilisee par l'admin pour avoir une liste unique triable par date, avec
--- l'origine de chaque commande clairement identifiee.
--- security_invoker : la vue applique les policies RLS des tables sources
--- selon l'utilisateur qui interroge, plutot que celles du proprietaire de la vue.
--- bucket regroupe les statuts (vocabulaires differents selon l'origine) en 3
--- categories communes, utilisees pour les compteurs du carnet de commandes.
-create or replace view order_book with (security_invoker = true) as
-select
-    'site'::text as source,
-    o.id,
-    o.created_at,
-    o.customer_name,
-    o.customer_phone,
-    o.status,
-    null::numeric as total_amount,
-    null::numeric as deposit_amount,
-    case o.status
-        when 'traitee' then 'traitee'
-        when 'annulee' then 'annulee'
-        else 'en_attente'
-    end as bucket
-from orders o
-union all
-select
-    'manuelle'::text as source,
-    m.id,
-    m.created_at,
-    m.customer_name,
-    m.customer_phone,
-    m.status,
-    m.total_amount,
-    m.deposit_amount,
-    case m.status
-        when 'livree' then 'traitee'
-        when 'annulee' then 'annulee'
-        else 'en_attente'
-    end as bucket
-from manual_orders m;
+-- Le carnet de commandes n'affiche que les commandes hors site : la vue
+-- unifiee avec les commandes du site (order_book) n'est plus utilisee, pour
+-- eviter de melanger les deux dans l'interface admin.
+drop view if exists order_book;

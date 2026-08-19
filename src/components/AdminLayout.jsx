@@ -59,18 +59,6 @@ export default function AdminLayout() {
                     </span>
                 </div>
 
-                <button
-                    onClick={() => setCollapsed((c) => !c)}
-                    className={`hidden lg:flex items-center gap-3 px-4 py-2.5 text-xs font-bold uppercase tracking-wide text-neutral-400 hover:bg-neutral-800 hover:text-white border-b border-neutral-800 shrink-0 ${
-                        collapsed ? 'justify-center px-0' : ''
-                    }`}
-                    aria-label={collapsed ? 'Agrandir le menu' : 'Réduire le menu'}
-                    title={collapsed ? 'Agrandir le menu' : 'Réduire le menu'}
-                >
-                    {collapsed ? <IconChevronRight className="w-4 h-4" /> : <IconChevronLeft className="w-4 h-4" />}
-                    {!collapsed && <span>Réduire</span>}
-                </button>
-
                 <nav className="flex-1 py-4 space-y-1 overflow-y-auto">
                     {NAV_ITEMS.map((item) => (
                         <AdminNavLink key={item.to} to={item.to} icon={item.icon} collapsed={collapsed}>
@@ -79,7 +67,19 @@ export default function AdminLayout() {
                     ))}
                 </nav>
 
-                <div className="p-4 border-t border-neutral-800 shrink-0">
+                <div className="p-4 border-t border-neutral-800 shrink-0 space-y-2">
+                    <button
+                        onClick={() => setCollapsed((c) => !c)}
+                        className={`hidden lg:flex btn-secondary btn-block !text-white !border-neutral-700 hover:!bg-neutral-800 ${
+                            collapsed ? 'lg:!px-0' : ''
+                        }`}
+                        aria-label={collapsed ? 'Agrandir le menu' : 'Réduire le menu'}
+                        title={collapsed ? 'Agrandir le menu' : 'Réduire le menu'}
+                    >
+                        {collapsed ? <IconChevronRight className="w-4 h-4 shrink-0" /> : <IconChevronLeft className="w-4 h-4 shrink-0" />}
+                        <span className={collapsed ? 'lg:hidden' : ''}>Réduire</span>
+                    </button>
+
                     <button
                         onClick={handleLogout}
                         title="Se déconnecter"

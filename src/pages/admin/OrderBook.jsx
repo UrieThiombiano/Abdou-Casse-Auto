@@ -1,19 +1,13 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { supabase } from '../../lib/supabaseClient'
-import { orderStatusLabel } from '../../lib/orderStatus'
-import { manualOrderStatusLabel } from '../../lib/manualOrderStatus'
+import { manualOrderStatusLabel, sourceTypeLabel } from '../../lib/manualOrderStatus'
 import { formatCFA } from '../../lib/numberToWords'
 import Pagination from '../../components/Pagination'
 import { adminTitle, useDocumentTitle } from '../../lib/title'
 
 const PER_PAGE = 20
-
-const SOURCE_FILTERS = [
-    { value: '', label: 'Toutes les origines' },
-    { value: 'site', label: 'Commandes en ligne' },
-    { value: 'manuelle', label: 'Commandes hors site' },
-]
+const PENDING_STATUSES = ['en_cours', 'expediee', 'douane', 'recue_magasin']
 
 function formatDateTime(iso) {
     return new Date(iso).toLocaleString('fr-FR', {
@@ -25,10 +19,6 @@ function formatDateTime(iso) {
     })
 }
 
-function statusLabel(row) {
-    return row.source === 'site' ? orderStatusLabel(row.status) : manualOrderStatusLabel(row.status)
-}
-
 export default function OrderBook() {
     useDocumentTitle(adminTitle('Carnet de commandes'))
     const navigate = useNavigate()
@@ -36,9 +26,10 @@ export default function OrderBook() {
     const [rows, setRows] = useState([])
     const [total, setTotal] = useState(0)
     const [page, setPage] = useState(1)
-    const [source, setSource] = useState('')
-    const [stats, setStats] = useState({ en_attente: 0, traitee: 0, annulee: 0 })
-    const [manualStats, setManualStats] = useState({
+    const [stats, setStats] = useState({
+        enAttente: 0,
+        traitee: 0,
+        annulee: 0,
         amountDue: 0,
         overdue: 0,
         revenueThisMonth: 0,
@@ -47,50 +38,51 @@ export default function OrderBook() {
     })
 
     const fetchStats = useCallback(async () => {
-        const buckets = ['en_attente', 'traitee', 'annulee']
-        const results = await Promise.all(
-            buckets.map(async (bucket) => {
-                let query = supabase.from('order_book').select('*', { count: 'exact', head: true }).eq('bucket', bucket)
-                if (source) query = query.eq('source', source)
-                const { count } = await query
-                return [bucket, count ?? 0]
-            })
-        )
-        setStats(Object.fromEntries(results))
-    }, [source])
-
-    const fetchManualStats = useCallback(async () => {
         const today = new Date().toISOString().slice(0, 10)
         const monthStart = new Date()
         monthStart.setDate(1)
         monthStart.setHours(0, 0, 0, 0)
 
-        const [{ data: unpaid }, { count: overdue }, { data: delivered }, { count: bassinko }, { count: exterieure }] =
-            await Promise.all([
-                supabase.from('manual_orders').select('total_amount, deposit_amount').neq('status', 'annulee'),
-                supabase
-                    .from('manual_orders')
-                    .select('*', { count: 'exact', head: true })
-                    .lt('estimated_delivery_date', today)
-                    .not('status', 'in', '(livree,annulee)'),
-                supabase
-                    .from('manual_orders')
-                    .select('total_amount')
-                    .eq('status', 'livree')
-                    .gte('updated_at', monthStart.toISOString()),
-                supabase
-                    .from('manual_orders')
-                    .select('*', { count: 'exact', head: true })
-                    .eq('source_type', 'entrepot_bassinko')
-                    .neq('status', 'annulee'),
-                supabase
-                    .from('manual_orders')
-                    .select('*', { count: 'exact', head: true })
-                    .eq('source_type', 'commande_exterieure')
-                    .neq('status', 'annulee'),
-            ])
+        const [
+            { count: enAttente },
+            { count: traitee },
+            { count: annulee },
+            { data: unpaid },
+            { count: overdue },
+            { data: delivered },
+            { count: bassinko },
+            { count: exterieure },
+        ] = await Promise.all([
+            supabase.from('manual_orders').select('*', { count: 'exact', head: true }).in('status', PENDING_STATUSES),
+            supabase.from('manual_orders').select('*', { count: 'exact', head: true }).eq('status', 'livree'),
+            supabase.from('manual_orders').select('*', { count: 'exact', head: true }).eq('status', 'annulee'),
+            supabase.from('manual_orders').select('total_amount, deposit_amount').neq('status', 'annulee'),
+            supabase
+                .from('manual_orders')
+                .select('*', { count: 'exact', head: true })
+                .lt('estimated_delivery_date', today)
+                .not('status', 'in', '(livree,annulee)'),
+            supabase
+                .from('manual_orders')
+                .select('total_amount')
+                .eq('status', 'livree')
+                .gte('updated_at', monthStart.toISOString()),
+            supabase
+                .from('manual_orders')
+                .select('*', { count: 'exact', head: true })
+                .eq('source_type', 'entrepot_bassinko')
+                .neq('status', 'annulee'),
+            supabase
+                .from('manual_orders')
+                .select('*', { count: 'exact', head: true })
+                .eq('source_type', 'commande_exterieure')
+                .neq('status', 'annulee'),
+        ])
 
-        setManualStats({
+        setStats({
+            enAttente: enAttente ?? 0,
+            traitee: traitee ?? 0,
+            annulee: annulee ?? 0,
             amountDue: (unpaid ?? []).reduce((sum, o) => sum + (o.total_amount - o.deposit_amount), 0),
             overdue: overdue ?? 0,
             revenueThisMonth: (delivered ?? []).reduce((sum, o) => sum + o.total_amount, 0),
@@ -103,20 +95,16 @@ export default function OrderBook() {
         fetchStats()
     }, [fetchStats])
 
-    useEffect(() => {
-        fetchManualStats()
-    }, [fetchManualStats])
-
     const fetchRows = useCallback(async () => {
         try {
-            let query = supabase.from('order_book').select('*', { count: 'exact' })
-
-            if (source) query = query.eq('source', source)
-
             const from = (page - 1) * PER_PAGE
             const to = from + PER_PAGE - 1
 
-            const { data, count } = await query.order('created_at', { ascending: false }).range(from, to)
+            const { data, count } = await supabase
+                .from('manual_orders')
+                .select('*', { count: 'exact' })
+                .order('created_at', { ascending: false })
+                .range(from, to)
 
             setRows(data ?? [])
             setTotal(count ?? 0)
@@ -124,39 +112,37 @@ export default function OrderBook() {
             setRows([])
             setTotal(0)
         }
-    }, [source, page])
+    }, [page])
 
     useEffect(() => {
         fetchRows()
     }, [fetchRows])
 
-    function openRow(row) {
-        if (row.source === 'manuelle') navigate(`/admin/carnet-de-commandes/${row.id}`)
-        else navigate('/admin/commandes')
-    }
-
     async function handleDelete(row, e) {
         e.stopPropagation()
         if (!window.confirm(`Supprimer la commande de ${row.customer_name} ?`)) return
         await supabase.from('manual_orders').delete().eq('id', row.id)
-        setRows((current) => current.filter((r) => !(r.source === 'manuelle' && r.id === row.id)))
+        setRows((current) => current.filter((r) => r.id !== row.id))
         fetchStats()
-        fetchManualStats()
     }
 
     return (
         <div>
-            <div className="flex items-center justify-between mb-6 gap-4 flex-wrap">
+            <div className="flex items-center justify-between mb-1 gap-4 flex-wrap">
                 <h1>Carnet de commandes</h1>
                 <Link to="/admin/carnet-de-commandes/nouvelle" className="btn-primary">
                     + Nouvelle commande
                 </Link>
             </div>
+            <p className="text-sm text-neutral-500 mb-6">
+                Commandes prises hors du site (entrepôt Bassinko ou commande extérieure). Les commandes passées sur le
+                site se gèrent dans « Commandes en ligne ».
+            </p>
 
             <div className="grid gap-4 sm:grid-cols-3 mb-6">
                 <div className="card elev-sm p-5 border-l-4 border-accent-2">
                     <p className="text-xs uppercase font-bold text-neutral-500 mb-1">En attente</p>
-                    <p className="text-3xl font-extrabold text-accent-2">{stats.en_attente}</p>
+                    <p className="text-3xl font-extrabold text-accent-2">{stats.enAttente}</p>
                 </div>
                 <div className="card elev-sm p-5">
                     <p className="text-xs uppercase font-bold text-neutral-500 mb-1">Traitées</p>
@@ -168,48 +154,27 @@ export default function OrderBook() {
                 </div>
             </div>
 
-            <h4 className="mb-4">Commandes hors site</h4>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-8">
                 <div className="card elev-sm p-5">
                     <p className="text-xs uppercase font-bold text-neutral-500 mb-1">Montant à encaisser</p>
-                    <p className="text-3xl font-extrabold">{formatCFA(manualStats.amountDue)}</p>
+                    <p className="text-3xl font-extrabold">{formatCFA(stats.amountDue)}</p>
                     <p className="text-xs text-neutral-500 mt-1">F CFA</p>
                 </div>
-                <div className={`card elev-sm p-5 ${manualStats.overdue > 0 ? 'border-l-4 border-red-500' : ''}`}>
+                <div className={`card elev-sm p-5 ${stats.overdue > 0 ? 'border-l-4 border-red-500' : ''}`}>
                     <p className="text-xs uppercase font-bold text-neutral-500 mb-1">Commandes en retard</p>
-                    <p className={`text-3xl font-extrabold ${manualStats.overdue > 0 ? 'text-red-600' : ''}`}>
-                        {manualStats.overdue}
-                    </p>
+                    <p className={`text-3xl font-extrabold ${stats.overdue > 0 ? 'text-red-600' : ''}`}>{stats.overdue}</p>
                 </div>
                 <div className="card elev-sm p-5">
                     <p className="text-xs uppercase font-bold text-neutral-500 mb-1">CA du mois (livrées)</p>
-                    <p className="text-3xl font-extrabold text-accent">{formatCFA(manualStats.revenueThisMonth)}</p>
+                    <p className="text-3xl font-extrabold text-accent">{formatCFA(stats.revenueThisMonth)}</p>
                     <p className="text-xs text-neutral-500 mt-1">F CFA</p>
                 </div>
                 <div className="card elev-sm p-5">
                     <p className="text-xs uppercase font-bold text-neutral-500 mb-1">Bassinko / Extérieur</p>
                     <p className="text-3xl font-extrabold">
-                        {manualStats.bassinko} <span className="text-base font-bold text-neutral-400">/</span>{' '}
-                        {manualStats.exterieure}
+                        {stats.bassinko} <span className="text-base font-bold text-neutral-400">/</span> {stats.exterieure}
                     </p>
                 </div>
-            </div>
-
-            <div className="field !mb-4 w-64">
-                <select
-                    className="input"
-                    value={source}
-                    onChange={(e) => {
-                        setSource(e.target.value)
-                        setPage(1)
-                    }}
-                >
-                    {SOURCE_FILTERS.map((f) => (
-                        <option key={f.value} value={f.value}>
-                            {f.label}
-                        </option>
-                    ))}
-                </select>
             </div>
 
             <div className="card elev-sm overflow-x-auto">
@@ -234,33 +199,19 @@ export default function OrderBook() {
                         ) : (
                             rows.map((row) => (
                                 <tr
-                                    key={`${row.source}-${row.id}`}
-                                    onClick={() => openRow(row)}
+                                    key={row.id}
+                                    onClick={() => navigate(`/admin/carnet-de-commandes/${row.id}`)}
                                     className="cursor-pointer hover:bg-neutral-100"
                                 >
                                     <td className="whitespace-nowrap">{formatDateTime(row.created_at)}</td>
-                                    <td>
-                                        <span
-                                            className={`inline-block px-2 py-0.5 rounded text-xs font-bold uppercase tracking-wide ${
-                                                row.source === 'site'
-                                                    ? 'bg-accent-100 text-accent-700'
-                                                    : 'bg-neutral-200 text-neutral-700'
-                                            }`}
-                                        >
-                                            {row.source === 'site' ? 'Site' : 'Manuelle'}
-                                        </span>
-                                    </td>
+                                    <td>{sourceTypeLabel(row.source_type)}</td>
                                     <td>{row.customer_name}</td>
-                                    <td className="whitespace-nowrap">
-                                        {row.total_amount === null ? '—' : `${formatCFA(row.total_amount)} F CFA`}
-                                    </td>
-                                    <td>{statusLabel(row)}</td>
+                                    <td className="whitespace-nowrap">{formatCFA(row.total_amount)} F CFA</td>
+                                    <td>{manualOrderStatusLabel(row.status)}</td>
                                     <td className="text-right whitespace-nowrap">
-                                        {row.source === 'manuelle' && (
-                                            <button onClick={(e) => handleDelete(row, e)} className="btn-ghost !text-red-600">
-                                                Supprimer
-                                            </button>
-                                        )}
+                                        <button onClick={(e) => handleDelete(row, e)} className="btn-ghost !text-red-600">
+                                            Supprimer
+                                        </button>
                                     </td>
                                 </tr>
                             ))
