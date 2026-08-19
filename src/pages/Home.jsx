@@ -8,6 +8,7 @@ import { trackEvent } from '../lib/analytics'
 import Reveal from '../components/Reveal'
 import LocationMap from '../components/LocationMap'
 import Typewriter from '../components/Typewriter'
+import BrandLogo from '../components/BrandLogo'
 
 const MotionLink = motion(Link)
 
@@ -206,9 +207,10 @@ export default function Home() {
                             {[...brands, ...brands].map((b, i) => (
                                 <span
                                     key={`${b.id}-${i}`}
-                                    className="shrink-0 mx-3 px-6 py-3 border border-neutral-700 text-neutral-200 font-extrabold uppercase tracking-wide text-sm"
+                                    className="shrink-0 mx-3 px-6 py-3 border border-neutral-700 text-neutral-200 flex items-center gap-3"
                                 >
-                                    {b.name}
+                                    <BrandLogo name={b.name} className="w-7 h-7 shrink-0" />
+                                    <span className="font-extrabold uppercase tracking-wide text-sm">{b.name}</span>
                                 </span>
                             ))}
                         </div>
