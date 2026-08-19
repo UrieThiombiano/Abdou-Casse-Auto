@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { supabase } from '../../lib/supabaseClient'
 import { storeCompressedPhoto, deleteStoredPhoto, photoUrl } from '../../lib/imageUploader'
+import { AVAILABILITY_OPTIONS, SUR_COMMANDE_DELAY, availabilityLabel } from '../../lib/availability'
 import Pagination from '../../components/Pagination'
 import { adminTitle, useDocumentTitle } from '../../lib/title'
 
@@ -10,6 +11,7 @@ const CURRENT_YEAR = new Date().getFullYear()
 const EMPTY_FORM = {
     title: '',
     category: 'neuf',
+    availability: 'en_stock',
     brand_id: '',
     model: '',
     year_from: '',
@@ -95,6 +97,7 @@ export default function ListingsManager() {
         setForm({
             title: listing.title,
             category: listing.category,
+            availability: listing.availability ?? 'en_stock',
             brand_id: String(listing.brand_id),
             model: listing.model ?? '',
             year_from: listing.year_from ?? '',
@@ -138,6 +141,7 @@ export default function ListingsManager() {
         const payload = {
             title: form.title,
             category: form.category,
+            availability: form.availability,
             brand_id: Number(form.brand_id),
             model: form.model || null,
             year_from: form.year_from ? Number(form.year_from) : null,
@@ -262,6 +266,27 @@ export default function ListingsManager() {
                                 </select>
                                 {errors.brand_id && <p className="text-sm text-red-600 mt-1">{errors.brand_id}</p>}
                             </div>
+                        </div>
+
+                        <div className="field">
+                            <label>Disponibilité *</label>
+                            <div className="seg">
+                                {AVAILABILITY_OPTIONS.map((o) => (
+                                    <button
+                                        key={o.value}
+                                        type="button"
+                                        onClick={() => set('availability', o.value)}
+                                        className={`seg-opt ${form.availability === o.value ? 'is-active' : ''}`}
+                                    >
+                                        {o.label}
+                                    </button>
+                                ))}
+                            </div>
+                            <p className="text-xs text-neutral-500 mt-1">
+                                {form.availability === 'en_stock'
+                                    ? 'La pièce est physiquement disponible au magasin.'
+                                    : `La pièce sera commandée à l'étranger — ${SUR_COMMANDE_DELAY}.`}
+                            </p>
                         </div>
 
                         <div className="grid sm:grid-cols-3 gap-4">
@@ -394,6 +419,7 @@ export default function ListingsManager() {
                         <tr>
                             <th>Titre</th>
                             <th>Rubrique</th>
+                            <th>Disponibilité</th>
                             <th>Marque</th>
                             <th>Année</th>
                             <th>Photos</th>
@@ -403,7 +429,7 @@ export default function ListingsManager() {
                     <tbody>
                         {listings.length === 0 ? (
                             <tr>
-                                <td colSpan={6} className="text-center text-neutral-500 py-6">
+                                <td colSpan={7} className="text-center text-neutral-500 py-6">
                                     Aucune annonce.
                                 </td>
                             </tr>
@@ -412,6 +438,20 @@ export default function ListingsManager() {
                                 <tr key={listing.id}>
                                     <td className="font-bold">{listing.title}</td>
                                     <td>{listing.category === 'neuf' ? 'Neuf' : 'Occasion'}</td>
+                                    <td>
+                                        <span
+                                            className={`inline-flex items-center gap-1.5 text-xs font-bold ${
+                                                listing.availability === 'sur_commande' ? 'text-accent-2-700' : 'text-green-700'
+                                            }`}
+                                        >
+                                            <span
+                                                className={`w-1.5 h-1.5 rounded-full shrink-0 ${
+                                                    listing.availability === 'sur_commande' ? 'bg-accent-2' : 'bg-green-600'
+                                                }`}
+                                            />
+                                            {availabilityLabel(listing.availability ?? 'en_stock')}
+                                        </span>
+                                    </td>
                                     <td>{listing.brand?.name}</td>
                                     <td>
                                         {listing.year_from ?? '—'}

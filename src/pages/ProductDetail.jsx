@@ -4,7 +4,9 @@ import { supabase } from '../lib/supabaseClient'
 import { photoUrl } from '../lib/imageUploader'
 import PhotoPlaceholder from '../components/PhotoPlaceholder'
 import WhatsappLink from '../components/WhatsappLink'
+import AvailabilityBadge from '../components/AvailabilityBadge'
 import Reveal from '../components/Reveal'
+import { SUR_COMMANDE_DELAY } from '../lib/availability'
 import { publicTitle, useDocumentTitle } from '../lib/title'
 import { trackEvent } from '../lib/analytics'
 
@@ -94,11 +96,14 @@ export default function ProductDetail() {
                 </Reveal>
 
                 <Reveal direction="left" delay={0.1}>
-                    {listing.category === 'neuf' ? (
-                        <span className="tag-accent mb-3">Neuf</span>
-                    ) : (
-                        <span className="tag-accent-2 mb-3">Occasion · France au revoir</span>
-                    )}
+                    <div className="flex items-center gap-3 flex-wrap mb-3">
+                        {listing.category === 'neuf' ? (
+                            <span className="tag-accent">Neuf</span>
+                        ) : (
+                            <span className="tag-accent-2">Occasion · France au revoir</span>
+                        )}
+                        <AvailabilityBadge availability={listing.availability} />
+                    </div>
 
                     <h1 className="mb-2">{listing.title}</h1>
                     <p className="text-neutral-600 mb-6">
@@ -117,6 +122,13 @@ export default function ProductDetail() {
                         <p className="text-sm mb-6">
                             <span className="font-bold">État :</span> {listing.item_condition}
                         </p>
+                    )}
+
+                    {listing.availability === 'sur_commande' && (
+                        <div className="bg-accent-2-100 border border-accent-2-200 p-4 text-sm mb-4">
+                            <strong>Pièce sur commande</strong> — cette référence n'est pas en rayon et sera commandée
+                            spécialement pour vous auprès de nos fournisseurs à l'étranger, avec une {SUR_COMMANDE_DELAY}.
+                        </div>
                     )}
 
                     <div className="bg-accent-100 border border-accent-200 p-4 text-sm mb-6">

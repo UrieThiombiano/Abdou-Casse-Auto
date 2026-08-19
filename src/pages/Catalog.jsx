@@ -6,6 +6,7 @@ import { photoUrl } from '../lib/imageUploader'
 import PhotoPlaceholder from '../components/PhotoPlaceholder'
 import Pagination from '../components/Pagination'
 import PartRequestButton from '../components/PartRequestButton'
+import AvailabilityBadge from '../components/AvailabilityBadge'
 import Reveal from '../components/Reveal'
 import { publicTitle, useDocumentTitle } from '../lib/title'
 
@@ -187,11 +188,14 @@ export default function Catalog({ category }) {
                                                     <PhotoPlaceholder />
                                                 )}
                                                 <div className="p-4">
-                                                    {listing.category === 'neuf' ? (
-                                                        <span className="tag-accent mb-2">Neuf</span>
-                                                    ) : (
-                                                        <span className="tag-accent-2 mb-2">Occasion · France au revoir</span>
-                                                    )}
+                                                    <div className="flex items-center justify-between gap-2 mb-2 flex-wrap">
+                                                        {listing.category === 'neuf' ? (
+                                                            <span className="tag-accent">Neuf</span>
+                                                        ) : (
+                                                            <span className="tag-accent-2">Occasion · France au revoir</span>
+                                                        )}
+                                                        <AvailabilityBadge availability={listing.availability} compact />
+                                                    </div>
                                                     <h4 className="mb-1">{listing.title}</h4>
                                                     <p className="text-sm text-neutral-600">
                                                         {listing.brand?.name}
