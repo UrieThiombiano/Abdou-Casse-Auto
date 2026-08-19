@@ -1,10 +1,10 @@
 import { motion } from 'framer-motion'
 
-const DIRECTIONS = {
-    up: { y: 28, x: 0 },
-    down: { y: -28, x: 0 },
-    left: { y: 0, x: 28 },
-    right: { y: 0, x: -28 },
+const AXIS = {
+    up: { y: 1, x: 0 },
+    down: { y: -1, x: 0 },
+    left: { y: 0, x: 1 },
+    right: { y: 0, x: -1 },
 }
 
 export default function Reveal({
@@ -13,13 +13,15 @@ export default function Reveal({
     direction = 'up',
     delay = 0,
     duration = 0.6,
+    distance = 28,
     className = '',
     once = true,
     amount = 0.25,
     ...rest
 }) {
     const Component = motion[as] ?? motion.div
-    const offset = DIRECTIONS[direction] ?? DIRECTIONS.up
+    const axis = AXIS[direction] ?? AXIS.up
+    const offset = { x: axis.x * distance, y: axis.y * distance }
 
     return (
         <Component

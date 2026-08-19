@@ -153,7 +153,7 @@ export default function Home() {
             {/* CARTES DE NAVIGATION */}
             <section className="max-w-6xl mx-auto px-4 py-16">
                 <div className="grid gap-5 sm:grid-cols-3">
-                    <Reveal delay={0} direction="right">
+                    <Reveal delay={0} direction="right" duration={1} distance={90}>
                         <MotionLink
                             whileHover={{ y: -6 }}
                             transition={{ type: 'spring', stiffness: 300, damping: 20 }}
@@ -165,7 +165,7 @@ export default function Home() {
                             <span className="btn-ghost">Voir le catalogue →</span>
                         </MotionLink>
                     </Reveal>
-                    <Reveal delay={0.1} direction="right">
+                    <Reveal delay={0.3} direction="right" duration={1} distance={90}>
                         <MotionLink
                             whileHover={{ y: -6 }}
                             transition={{ type: 'spring', stiffness: 300, damping: 20 }}
@@ -177,7 +177,7 @@ export default function Home() {
                             <span className="btn-ghost">Voir le catalogue →</span>
                         </MotionLink>
                     </Reveal>
-                    <Reveal delay={0.2} direction="right">
+                    <Reveal delay={0.6} direction="right" duration={1} distance={90}>
                         <MotionLink
                             whileHover={{ y: -6 }}
                             transition={{ type: 'spring', stiffness: 300, damping: 20 }}
