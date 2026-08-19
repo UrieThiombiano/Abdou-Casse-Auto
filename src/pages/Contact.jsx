@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
-import { company, telHref } from '../lib/company'
+import { company, telHref, mailHref } from '../lib/company'
 import WhatsappLink from '../components/WhatsappLink'
+import LocationMap from '../components/LocationMap'
+import Reveal from '../components/Reveal'
 import { publicTitle, useDocumentTitle } from '../lib/title'
 import { trackEvent } from '../lib/analytics'
 
@@ -48,10 +50,12 @@ export default function Contact() {
 
     return (
         <div className="max-w-6xl mx-auto px-4 py-12">
-            <h1 className="mb-8">Contact</h1>
+            <Reveal as="h1" className="mb-8">
+                Contact
+            </Reveal>
 
             <div className="grid lg:grid-cols-2 gap-10">
-                <div>
+                <Reveal direction="right">
                     <h4 className="mb-3">Coordonnées</h4>
                     <ul className="space-y-1 text-neutral-700 mb-6">
                         {company.phones.map((phone) => (
@@ -61,6 +65,11 @@ export default function Contact() {
                                 </a>
                             </li>
                         ))}
+                        <li>
+                            <a href={mailHref(company.email)} className="hover:text-accent">
+                                {company.email}
+                            </a>
+                        </li>
                     </ul>
 
                     <p className="text-neutral-700 mb-1">
@@ -98,27 +107,12 @@ export default function Contact() {
                             {submitting ? 'Envoi…' : 'Envoyer'}
                         </button>
                     </form>
-                </div>
+                </Reveal>
 
-                <div>
+                <Reveal direction="left" delay={0.1}>
                     <h4 className="mb-3">Localisation</h4>
-                    <a
-                        href={company.mapsUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={() => trackEvent('location_click')}
-                        className="bg-surface aspect-[4/3] flex flex-col items-center justify-center gap-3 text-center p-6 border border-neutral-200 hover:border-accent transition-colors"
-                    >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-accent">
-                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z" />
-                            <circle cx="12" cy="10" r="3" />
-                        </svg>
-                        <span className="font-bold text-ink">
-                            {company.name} — {company.city}
-                        </span>
-                        <span className="btn-primary">Voir sur Google Maps</span>
-                    </a>
-                </div>
+                    <LocationMap />
+                </Reveal>
             </div>
         </div>
     )

@@ -61,7 +61,9 @@ Dans **SQL Editor** de Supabase, exécutez dans l'ordre :
 1. `supabase/schema.sql` — tables, sécurité (RLS), bucket de stockage `listing-photos`
 2. `supabase/part_requests.sql` — table + bucket `part-request-photos` pour "Avez-vous cette pièce ?"
 3. `supabase/analytics.sql` — table + fonction `analytics_summary()` pour les statistiques de fréquentation
-4. `supabase/seed.sql` — marques + annonces de démonstration (optionnel, à supprimer en prod)
+4. `supabase/proformas.sql` — table des factures proforma
+5. `supabase/manual_orders.sql` — table des commandes hors site + vue `order_book` (carnet de commandes)
+6. `supabase/seed.sql` — marques + annonces de démonstration (optionnel, à supprimer en prod)
 
 ### 3. Configurer les variables d'environnement
 
@@ -139,6 +141,8 @@ supabase/
   schema.sql        Tables + RLS + bucket de stockage
   part_requests.sql Table + bucket "Avez-vous cette pièce ?"
   analytics.sql     Table + fonction agrégée pour les statistiques de fréquentation
+  proformas.sql     Table des factures proforma
+  manual_orders.sql Table des commandes hors site + vue order_book (carnet de commandes)
   seed.sql          Marques + annonces de démonstration
   create-admin.mjs  Script de création du compte admin
 ```

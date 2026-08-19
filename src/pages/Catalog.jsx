@@ -1,15 +1,30 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import { supabase } from '../lib/supabaseClient'
 import { photoUrl } from '../lib/imageUploader'
 import PhotoPlaceholder from '../components/PhotoPlaceholder'
 import Pagination from '../components/Pagination'
 import PartRequestButton from '../components/PartRequestButton'
+import Reveal from '../components/Reveal'
 import { publicTitle, useDocumentTitle } from '../lib/title'
+
+const MotionLink = motion(Link)
 
 const PER_PAGE = 12
 const CURRENT_YEAR = new Date().getFullYear()
 const YEARS = Array.from({ length: CURRENT_YEAR - 1990 + 1 }, (_, i) => CURRENT_YEAR - i)
+
+const HEADER_BACKGROUNDS = {
+    neuf: {
+        src: '/img/catalogue-neuf.jpg',
+        alt: 'Pièces auto neuves rangées en atelier',
+    },
+    occasion: {
+        src: '/img/catalogue-occasion.jpg',
+        alt: "Moteurs et pièces d'occasion récupérés",
+    },
+}
 
 export default function Catalog({ category }) {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -82,37 +97,56 @@ export default function Catalog({ category }) {
     }
 
     const title = category === 'neuf' ? 'Pièces neuves' : "Occasion — France au revoir"
+    const headerBg = HEADER_BACKGROUNDS[category]
     useDocumentTitle(publicTitle(title))
 
     return (
         <div>
-            <div className="bg-surface border-b border-neutral-200">
-                <div className="max-w-6xl mx-auto px-4 py-6">
-                    <h1 className="mb-4">{title}</h1>
-                    <div className="flex flex-wrap gap-4">
-                        <div className="field !mb-0 w-44">
-                            <label>Marque</label>
-                            <select className="input" value={brand} onChange={(e) => updateParam('marque', e.target.value)}>
-                                <option value="">Toutes les marques</option>
-                                {brands.map((b) => (
-                                    <option key={b.id} value={b.id}>
-                                        {b.name}
-                                    </option>
-                                ))}
-                            </select>
+            <div className="relative overflow-hidden bg-neutral-900 text-white">
+                <div className="absolute inset-0">
+                    <img src={headerBg.src} alt={headerBg.alt} className="w-full h-full object-cover opacity-90" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-neutral-900/85 via-neutral-900/55 to-neutral-900/15" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-neutral-900/60 via-transparent to-transparent" />
+                </div>
+
+                <div className="relative max-w-6xl mx-auto px-4 py-14 sm:py-20">
+                    <Reveal as="h1" className="mb-6 text-white">
+                        {title}
+                    </Reveal>
+                    <Reveal delay={0.1}>
+                        <div className="bg-white/10 backdrop-blur-md border border-white/20 p-4 flex flex-wrap gap-4 shadow-xl max-w-xl">
+                            <div className="field !mb-0 w-44">
+                                <label className="!text-white/90">Marque</label>
+                                <select
+                                    className="input input-glass"
+                                    value={brand}
+                                    onChange={(e) => updateParam('marque', e.target.value)}
+                                >
+                                    <option value="">Toutes les marques</option>
+                                    {brands.map((b) => (
+                                        <option key={b.id} value={b.id}>
+                                            {b.name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className="field !mb-0 w-32">
+                                <label className="!text-white/90">Année</label>
+                                <select
+                                    className="input input-glass"
+                                    value={year}
+                                    onChange={(e) => updateParam('annee', e.target.value)}
+                                >
+                                    <option value="">Toutes</option>
+                                    {YEARS.map((y) => (
+                                        <option key={y} value={y}>
+                                            {y}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
                         </div>
-                        <div className="field !mb-0 w-32">
-                            <label>Année</label>
-                            <select className="input" value={year} onChange={(e) => updateParam('annee', e.target.value)}>
-                                <option value="">Toutes</option>
-                                {YEARS.map((y) => (
-                                    <option key={y} value={y}>
-                                        {y}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                    </div>
+                    </Reveal>
                 </div>
             </div>
 
@@ -136,41 +170,43 @@ export default function Catalog({ category }) {
                                     const firstPhoto = sortedPhotos[0]
 
                                     return (
-                                        <Link
-                                            key={listing.id}
-                                            to={`/produit/${listing.id}`}
-                                            className="card elev-sm hover:shadow-lg transition-shadow overflow-hidden"
-                                            style={{ animation: `fadeInUp .4s ${Math.min(i, 8) * 0.05}s ease both` }}
-                                        >
-                                            {firstPhoto ? (
-                                                <img
-                                                    src={photoUrl(firstPhoto.path)}
-                                                    alt={listing.title}
-                                                    className="w-full aspect-[4/3] object-cover"
-                                                />
-                                            ) : (
-                                                <PhotoPlaceholder />
-                                            )}
-                                            <div className="p-4">
-                                                {listing.category === 'neuf' ? (
-                                                    <span className="tag-accent mb-2">Neuf</span>
+                                        <Reveal key={listing.id} delay={Math.min(i, 8) * 0.05} amount={0.1}>
+                                            <MotionLink
+                                                whileHover={{ y: -6 }}
+                                                transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                                                to={`/produit/${listing.id}`}
+                                                className="card elev-sm hover:shadow-xl transition-shadow overflow-hidden block h-full"
+                                            >
+                                                {firstPhoto ? (
+                                                    <img
+                                                        src={photoUrl(firstPhoto.path)}
+                                                        alt={listing.title}
+                                                        className="w-full aspect-[4/3] object-cover"
+                                                    />
                                                 ) : (
-                                                    <span className="tag-accent-2 mb-2">Occasion · France au revoir</span>
+                                                    <PhotoPlaceholder />
                                                 )}
-                                                <h4 className="mb-1">{listing.title}</h4>
-                                                <p className="text-sm text-neutral-600">
-                                                    {listing.brand?.name}
-                                                    {listing.model ? ` · ${listing.model}` : ''}
-                                                    {listing.year_from
-                                                        ? ` · ${listing.year_from}${
-                                                              listing.year_to && listing.year_to !== listing.year_from
-                                                                  ? `–${listing.year_to}`
-                                                                  : ''
-                                                          }`
-                                                        : ''}
-                                                </p>
-                                            </div>
-                                        </Link>
+                                                <div className="p-4">
+                                                    {listing.category === 'neuf' ? (
+                                                        <span className="tag-accent mb-2">Neuf</span>
+                                                    ) : (
+                                                        <span className="tag-accent-2 mb-2">Occasion · France au revoir</span>
+                                                    )}
+                                                    <h4 className="mb-1">{listing.title}</h4>
+                                                    <p className="text-sm text-neutral-600">
+                                                        {listing.brand?.name}
+                                                        {listing.model ? ` · ${listing.model}` : ''}
+                                                        {listing.year_from
+                                                            ? ` · ${listing.year_from}${
+                                                                  listing.year_to && listing.year_to !== listing.year_from
+                                                                      ? `–${listing.year_to}`
+                                                                      : ''
+                                                              }`
+                                                            : ''}
+                                                    </p>
+                                                </div>
+                                            </MotionLink>
+                                        </Reveal>
                                     )
                                 })
                             )}

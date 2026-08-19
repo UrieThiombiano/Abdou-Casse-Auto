@@ -57,13 +57,13 @@ async function exportOrdersCsv() {
 
     const a = document.createElement('a')
     a.href = url
-    a.download = 'commandes_abdou_casse_auto.csv'
+    a.download = 'commandes_en_ligne_abdou_casse_auto.csv'
     a.click()
     URL.revokeObjectURL(url)
 }
 
 export default function OrdersManager() {
-    useDocumentTitle(adminTitle('Commandes'))
+    useDocumentTitle(adminTitle('Commandes en ligne'))
 
     const [orders, setOrders] = useState([])
     const [total, setTotal] = useState(0)
@@ -107,7 +107,7 @@ export default function OrdersManager() {
     return (
         <div>
             <div className="flex items-center justify-between mb-6 gap-4 flex-wrap">
-                <h1>Commandes</h1>
+                <h1>Commandes en ligne</h1>
                 <button onClick={exportOrdersCsv} className="btn-secondary">
                     Exporter en Excel (CSV)
                 </button>

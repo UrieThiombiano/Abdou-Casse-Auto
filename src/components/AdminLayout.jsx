@@ -34,8 +34,10 @@ export default function AdminLayout() {
                 <nav className="flex-1 py-4 space-y-1">
                     <AdminNavLink to="/admin/dashboard">Tableau de bord</AdminNavLink>
                     <AdminNavLink to="/admin/annonces">Annonces</AdminNavLink>
-                    <AdminNavLink to="/admin/commandes">Commandes</AdminNavLink>
+                    <AdminNavLink to="/admin/commandes">Commandes en ligne</AdminNavLink>
+                    <AdminNavLink to="/admin/carnet-de-commandes">Carnet de commandes</AdminNavLink>
                     <AdminNavLink to="/admin/demandes">Demandes de pièces</AdminNavLink>
+                    <AdminNavLink to="/admin/proformas">Proforma</AdminNavLink>
                 </nav>
 
                 <div className="p-4 border-t border-neutral-800">

@@ -104,6 +104,16 @@
         @apply min-h-[100px];
     }
 
+    /* Champ translucide sur fond photo : le contrôle reste "verre dépoli",
+       mais les options du menu déroulant restent lisibles (fond clair natif). */
+    .input-glass {
+        @apply bg-white/15 backdrop-blur-sm border-white/30 text-white placeholder-white/70 focus:border-white focus:ring-white/40;
+    }
+    .input-glass option {
+        color: var(--color-ink);
+        background: #ffffff;
+    }
+
     .seg {
         @apply inline-flex border border-neutral-300;
     }
@@ -144,4 +154,49 @@
 @keyframes ctaPulse {
     0%, 100% { box-shadow: 0 0 0 0 rgba(242, 106, 33, 0.5); }
     50% { box-shadow: 0 0 0 10px rgba(242, 106, 33, 0); }
+}
+@keyframes kenBurns {
+    0% { transform: scale(1) translate(0, 0); }
+    100% { transform: scale(1.12) translate(-1%, -1%); }
+}
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+@layer components {
+    .kb-image {
+        animation: kenBurns 16s ease-out both;
+        animation-play-state: running;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .kb-image {
+        animation: none;
+    }
+}
+
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    #proforma-paper,
+    #proforma-paper * {
+        visibility: visible;
+    }
+    #proforma-paper {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        padding: 12mm;
+        box-shadow: none;
+    }
+    @page {
+        size: A4;
+        margin: 0;
+    }
 }

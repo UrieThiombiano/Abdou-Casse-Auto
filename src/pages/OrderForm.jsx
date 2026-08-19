@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import { supabase } from '../lib/supabaseClient'
 import { company } from '../lib/company'
+import Reveal from '../components/Reveal'
 import { useDocumentTitle } from '../lib/title'
 
 const CURRENT_YEAR = new Date().getFullYear()
@@ -113,22 +115,42 @@ export default function OrderForm() {
         return (
             <div className="max-w-2xl mx-auto px-4 py-12">
                 <div className="text-center py-12">
-                    <div
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.7 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                         className="badge-circle w-20 h-20 bg-accent text-white mx-auto mb-6 flex items-center justify-center"
-                        style={{ animation: 'scaleIn .4s ease both' }}
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                             <polyline points="20 6 9 17 4 12" />
                         </svg>
-                    </div>
-                    <h1 className="mb-3">Votre demande a été envoyée</h1>
-                    <p className="text-neutral-600 max-w-md mx-auto mb-8">
+                    </motion.div>
+                    <motion.h1
+                        initial={{ opacity: 0, y: 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.15 }}
+                        className="mb-3"
+                    >
+                        Votre demande a été envoyée
+                    </motion.h1>
+                    <motion.p
+                        initial={{ opacity: 0, y: 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.22 }}
+                        className="text-neutral-600 max-w-md mx-auto mb-8"
+                    >
                         Notre équipe vous contactera pour confirmer la disponibilité et organiser la livraison. Paiement
                         à la livraison uniquement — aucun paiement en ligne n'est requis.
-                    </p>
-                    <Link to="/" className="btn-primary">
-                        Retour à l'accueil
-                    </Link>
+                    </motion.p>
+                    <motion.div
+                        initial={{ opacity: 0, y: 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.3 }}
+                    >
+                        <Link to="/" className="btn-primary">
+                            Retour à l'accueil
+                        </Link>
+                    </motion.div>
                 </div>
             </div>
         )
@@ -136,7 +158,9 @@ export default function OrderForm() {
 
     return (
         <div className="max-w-2xl mx-auto px-4 py-12">
-            <h1 className="mb-2">Commander une pièce</h1>
+            <Reveal as="h1" className="mb-2">
+                Commander une pièce
+            </Reveal>
             <p className="text-neutral-600 mb-6">
                 Aucun paiement en ligne n'est requis. Le règlement se fait uniquement à la livraison.
             </p>
@@ -154,7 +178,7 @@ export default function OrderForm() {
                 </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <Reveal delay={0.1} as="form" onSubmit={handleSubmit} className="space-y-4">
                 <div className="field">
                     <label htmlFor="customer_name">Nom complet *</label>
                     <input
@@ -232,7 +256,7 @@ export default function OrderForm() {
                 <button type="submit" className="btn-primary btn-block" disabled={submitting}>
                     {submitting ? 'Envoi…' : 'Envoyer la demande'}
                 </button>
-            </form>
+            </Reveal>
         </div>
     )
 }

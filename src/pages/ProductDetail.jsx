@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabaseClient'
 import { photoUrl } from '../lib/imageUploader'
 import PhotoPlaceholder from '../components/PhotoPlaceholder'
 import WhatsappLink from '../components/WhatsappLink'
+import Reveal from '../components/Reveal'
 import { publicTitle, useDocumentTitle } from '../lib/title'
 import { trackEvent } from '../lib/analytics'
 
@@ -65,7 +66,7 @@ export default function ProductDetail() {
             </Link>
 
             <div className="grid lg:grid-cols-2 gap-10">
-                <div>
+                <Reveal direction="right">
                     {photos.length > 0 ? (
                         <div>
                             <img
@@ -90,9 +91,9 @@ export default function ProductDetail() {
                     ) : (
                         <PhotoPlaceholder className="w-full aspect-[4/3]" />
                     )}
-                </div>
+                </Reveal>
 
-                <div>
+                <Reveal direction="left" delay={0.1}>
                     {listing.category === 'neuf' ? (
                         <span className="tag-accent mb-3">Neuf</span>
                     ) : (
@@ -129,7 +130,7 @@ export default function ProductDetail() {
                         </Link>
                         <WhatsappLink text={`Bonjour, je suis intéressé(e) par : ${listing.title}`} />
                     </div>
-                </div>
+                </Reveal>
             </div>
         </div>
     )

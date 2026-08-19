@@ -2,7 +2,8 @@ import { useState } from 'react'
 import { Link, Outlet } from 'react-router-dom'
 import PublicNavLink from './PublicNavLink'
 import RouteTracker from './RouteTracker'
-import { company, telHref } from '../lib/company'
+import SmoothScroll from './SmoothScroll'
+import { company, telHref, mailHref } from '../lib/company'
 import { trackEvent } from '../lib/analytics'
 
 export default function PublicLayout() {
@@ -10,6 +11,7 @@ export default function PublicLayout() {
 
     return (
         <div className="bg-bg text-ink antialiased min-h-screen flex flex-col">
+            <SmoothScroll />
             <RouteTracker />
             <header className="sticky top-0 z-40 bg-white border-b border-neutral-200">
                 <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
@@ -107,6 +109,11 @@ export default function PublicLayout() {
                                     </a>
                                 </li>
                             ))}
+                            <li>
+                                <a href={mailHref(company.email)} className="hover:text-accent">
+                                    {company.email}
+                                </a>
+                            </li>
                         </ul>
                     </div>
                     <div>
