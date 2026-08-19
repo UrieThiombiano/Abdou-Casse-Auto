@@ -38,6 +38,13 @@ export default function OrderBook() {
     const [page, setPage] = useState(1)
     const [source, setSource] = useState('')
     const [stats, setStats] = useState({ en_attente: 0, traitee: 0, annulee: 0 })
+    const [manualStats, setManualStats] = useState({
+        amountDue: 0,
+        overdue: 0,
+        revenueThisMonth: 0,
+        bassinko: 0,
+        exterieure: 0,
+    })
 
     const fetchStats = useCallback(async () => {
         const buckets = ['en_attente', 'traitee', 'annulee']
@@ -52,9 +59,53 @@ export default function OrderBook() {
         setStats(Object.fromEntries(results))
     }, [source])
 
+    const fetchManualStats = useCallback(async () => {
+        const today = new Date().toISOString().slice(0, 10)
+        const monthStart = new Date()
+        monthStart.setDate(1)
+        monthStart.setHours(0, 0, 0, 0)
+
+        const [{ data: unpaid }, { count: overdue }, { data: delivered }, { count: bassinko }, { count: exterieure }] =
+            await Promise.all([
+                supabase.from('manual_orders').select('total_amount, deposit_amount').neq('status', 'annulee'),
+                supabase
+                    .from('manual_orders')
+                    .select('*', { count: 'exact', head: true })
+                    .lt('estimated_delivery_date', today)
+                    .not('status', 'in', '(livree,annulee)'),
+                supabase
+                    .from('manual_orders')
+                    .select('total_amount')
+                    .eq('status', 'livree')
+                    .gte('updated_at', monthStart.toISOString()),
+                supabase
+                    .from('manual_orders')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('source_type', 'entrepot_bassinko')
+                    .neq('status', 'annulee'),
+                supabase
+                    .from('manual_orders')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('source_type', 'commande_exterieure')
+                    .neq('status', 'annulee'),
+            ])
+
+        setManualStats({
+            amountDue: (unpaid ?? []).reduce((sum, o) => sum + (o.total_amount - o.deposit_amount), 0),
+            overdue: overdue ?? 0,
+            revenueThisMonth: (delivered ?? []).reduce((sum, o) => sum + o.total_amount, 0),
+            bassinko: bassinko ?? 0,
+            exterieure: exterieure ?? 0,
+        })
+    }, [])
+
     useEffect(() => {
         fetchStats()
     }, [fetchStats])
+
+    useEffect(() => {
+        fetchManualStats()
+    }, [fetchManualStats])
 
     const fetchRows = useCallback(async () => {
         try {
@@ -90,6 +141,7 @@ export default function OrderBook() {
         await supabase.from('manual_orders').delete().eq('id', row.id)
         setRows((current) => current.filter((r) => !(r.source === 'manuelle' && r.id === row.id)))
         fetchStats()
+        fetchManualStats()
     }
 
     return (
@@ -113,6 +165,33 @@ export default function OrderBook() {
                 <div className="card elev-sm p-5">
                     <p className="text-xs uppercase font-bold text-neutral-500 mb-1">Annulées</p>
                     <p className="text-3xl font-extrabold">{stats.annulee}</p>
+                </div>
+            </div>
+
+            <h4 className="mb-4">Commandes hors site</h4>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-8">
+                <div className="card elev-sm p-5">
+                    <p className="text-xs uppercase font-bold text-neutral-500 mb-1">Montant à encaisser</p>
+                    <p className="text-3xl font-extrabold">{formatCFA(manualStats.amountDue)}</p>
+                    <p className="text-xs text-neutral-500 mt-1">F CFA</p>
+                </div>
+                <div className={`card elev-sm p-5 ${manualStats.overdue > 0 ? 'border-l-4 border-red-500' : ''}`}>
+                    <p className="text-xs uppercase font-bold text-neutral-500 mb-1">Commandes en retard</p>
+                    <p className={`text-3xl font-extrabold ${manualStats.overdue > 0 ? 'text-red-600' : ''}`}>
+                        {manualStats.overdue}
+                    </p>
+                </div>
+                <div className="card elev-sm p-5">
+                    <p className="text-xs uppercase font-bold text-neutral-500 mb-1">CA du mois (livrées)</p>
+                    <p className="text-3xl font-extrabold text-accent">{formatCFA(manualStats.revenueThisMonth)}</p>
+                    <p className="text-xs text-neutral-500 mt-1">F CFA</p>
+                </div>
+                <div className="card elev-sm p-5">
+                    <p className="text-xs uppercase font-bold text-neutral-500 mb-1">Bassinko / Extérieur</p>
+                    <p className="text-3xl font-extrabold">
+                        {manualStats.bassinko} <span className="text-base font-bold text-neutral-400">/</span>{' '}
+                        {manualStats.exterieure}
+                    </p>
                 </div>
             </div>
 
