@@ -193,6 +193,29 @@ export default function Home() {
                 </div>
             </section>
 
+            {/* MARQUES COUVERTES */}
+            {brands.length > 0 && (
+                <section className="py-14 bg-neutral-900 overflow-hidden">
+                    <Reveal as="h2" className="text-white text-center mb-8 px-4">
+                        Trouvez les pièces pour votre marque de véhicule
+                    </Reveal>
+                    <div className="relative">
+                        <div className="absolute inset-y-0 left-0 w-16 sm:w-32 bg-gradient-to-r from-neutral-900 to-transparent z-10" />
+                        <div className="absolute inset-y-0 right-0 w-16 sm:w-32 bg-gradient-to-l from-neutral-900 to-transparent z-10" />
+                        <div className="flex w-max animate-[marquee_28s_linear_infinite] hover:[animation-play-state:paused]">
+                            {[...brands, ...brands].map((b, i) => (
+                                <span
+                                    key={`${b.id}-${i}`}
+                                    className="shrink-0 mx-3 px-6 py-3 border border-neutral-700 text-neutral-200 font-extrabold uppercase tracking-wide text-sm"
+                                >
+                                    {b.name}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            )}
+
             {/* COMMANDER DEPUIS NOS LOCAUX OU A DISTANCE */}
             <section className="py-16 sm:py-24 overflow-hidden">
                 <div className="max-w-6xl mx-auto px-4 grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
