@@ -1,13 +1,41 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
 import AdminNavLink from './AdminNavLink'
 import { useAuth } from '../context/AuthContext'
 import { company } from '../lib/company'
+import {
+    IconChevronLeft,
+    IconChevronRight,
+    IconDashboard,
+    IconListings,
+    IconLogout,
+    IconMenu,
+    IconOrderBook,
+    IconOrdersOnline,
+    IconPartRequests,
+    IconProforma,
+} from './AdminIcons'
+
+const NAV_ITEMS = [
+    { to: '/admin/dashboard', label: 'Tableau de bord', icon: IconDashboard },
+    { to: '/admin/annonces', label: 'Annonces', icon: IconListings },
+    { to: '/admin/commandes', label: 'Commandes en ligne', icon: IconOrdersOnline },
+    { to: '/admin/carnet-de-commandes', label: 'Carnet de commandes', icon: IconOrderBook },
+    { to: '/admin/demandes', label: 'Demandes de pièces', icon: IconPartRequests },
+    { to: '/admin/proformas', label: 'Proforma', icon: IconProforma },
+]
+
+const COLLAPSE_KEY = 'admin-sidebar-collapsed'
 
 export default function AdminLayout() {
-    const [sidebarOpen, setSidebarOpen] = useState(false)
+    const [mobileOpen, setMobileOpen] = useState(false)
+    const [collapsed, setCollapsed] = useState(() => localStorage.getItem(COLLAPSE_KEY) === '1')
     const { signOut } = useAuth()
     const navigate = useNavigate()
+
+    useEffect(() => {
+        localStorage.setItem(COLLAPSE_KEY, collapsed ? '1' : '0')
+    }, [collapsed])
 
     async function handleLogout(e) {
         e.preventDefault()
@@ -16,47 +44,60 @@ export default function AdminLayout() {
     }
 
     return (
-        <div className="bg-surface text-ink antialiased min-h-screen lg:flex">
+        <div className="bg-surface text-ink antialiased min-h-screen">
             <aside
-                className={`fixed lg:static inset-y-0 left-0 z-40 w-64 bg-neutral-900 text-white flex flex-col transition-transform ${
-                    sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
-                }`}
+                className={`fixed inset-y-0 left-0 z-40 bg-neutral-900 text-white flex flex-col transition-all duration-200 w-64 ${
+                    collapsed ? 'lg:w-20' : 'lg:w-64'
+                } ${mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
             >
-                <div className="flex items-center gap-3 px-4 h-16 border-b border-neutral-800">
-                    <img src="/img/logo.jpg" alt={company.name} className="w-9 h-9 rounded-full object-cover" />
-                    <span className="font-extrabold text-sm leading-tight">
+                <div className={`flex items-center gap-3 px-4 h-16 border-b border-neutral-800 shrink-0 ${collapsed ? 'lg:justify-center lg:px-0' : ''}`}>
+                    <img src="/img/logo.jpg" alt={company.name} className="w-9 h-9 rounded-full object-cover shrink-0" />
+                    <span className={`font-extrabold text-sm leading-tight ${collapsed ? 'lg:hidden' : ''}`}>
                         ABDOU CASSE AUTO
                         <br />
                         <span className="text-accent text-xs">Espace admin</span>
                     </span>
                 </div>
 
-                <nav className="flex-1 py-4 space-y-1">
-                    <AdminNavLink to="/admin/dashboard">Tableau de bord</AdminNavLink>
-                    <AdminNavLink to="/admin/annonces">Annonces</AdminNavLink>
-                    <AdminNavLink to="/admin/commandes">Commandes en ligne</AdminNavLink>
-                    <AdminNavLink to="/admin/carnet-de-commandes">Carnet de commandes</AdminNavLink>
-                    <AdminNavLink to="/admin/demandes">Demandes de pièces</AdminNavLink>
-                    <AdminNavLink to="/admin/proformas">Proforma</AdminNavLink>
+                <button
+                    onClick={() => setCollapsed((c) => !c)}
+                    className={`hidden lg:flex items-center gap-3 px-4 py-2.5 text-xs font-bold uppercase tracking-wide text-neutral-400 hover:bg-neutral-800 hover:text-white border-b border-neutral-800 shrink-0 ${
+                        collapsed ? 'justify-center px-0' : ''
+                    }`}
+                    aria-label={collapsed ? 'Agrandir le menu' : 'Réduire le menu'}
+                    title={collapsed ? 'Agrandir le menu' : 'Réduire le menu'}
+                >
+                    {collapsed ? <IconChevronRight className="w-4 h-4" /> : <IconChevronLeft className="w-4 h-4" />}
+                    {!collapsed && <span>Réduire</span>}
+                </button>
+
+                <nav className="flex-1 py-4 space-y-1 overflow-y-auto">
+                    {NAV_ITEMS.map((item) => (
+                        <AdminNavLink key={item.to} to={item.to} icon={item.icon} collapsed={collapsed}>
+                            {item.label}
+                        </AdminNavLink>
+                    ))}
                 </nav>
 
-                <div className="p-4 border-t border-neutral-800">
+                <div className="p-4 border-t border-neutral-800 shrink-0">
                     <button
                         onClick={handleLogout}
-                        className="btn-secondary btn-block !text-white !border-neutral-700 hover:!bg-neutral-800"
+                        title="Se déconnecter"
+                        className={`btn-secondary btn-block !text-white !border-neutral-700 hover:!bg-neutral-800 ${
+                            collapsed ? 'lg:!px-0' : ''
+                        }`}
                     >
-                        Se déconnecter
+                        <IconLogout className="w-4 h-4 shrink-0" />
+                        <span className={collapsed ? 'lg:hidden' : ''}>Se déconnecter</span>
                     </button>
                 </div>
             </aside>
 
-            <div className="flex-1 min-w-0">
+            <div className={`min-w-0 transition-all duration-200 ${collapsed ? 'lg:ml-20' : 'lg:ml-64'}`}>
                 <div className="lg:hidden sticky top-0 z-30 bg-neutral-900 text-white h-14 flex items-center justify-between px-4">
                     <span className="font-extrabold text-sm">ABDOU CASSE AUTO — Admin</span>
-                    <button onClick={() => setSidebarOpen((o) => !o)} aria-label="Menu">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path d="M3 6h18M3 12h18M3 18h18" />
-                        </svg>
+                    <button onClick={() => setMobileOpen((o) => !o)} aria-label="Menu">
+                        <IconMenu className="w-6 h-6" />
                     </button>
                 </div>
 
