@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
-import { storePartRequestPhoto } from '../lib/imageUploader'
+import { storePartRequestPhotos } from '../lib/imageUploader'
 
-const EMPTY_FORM = { customer_name: '', customer_phone: '', message: '' }
+const EMPTY_FORM = { customer_name: '', customer_phone: '', vin: '', message: '' }
+const MAX_PHOTOS = 5
 
 export default function PartRequestButton() {
     const [open, setOpen] = useState(false)
     const [form, setForm] = useState(EMPTY_FORM)
-    const [photo, setPhoto] = useState(null)
-    const [photoPreview, setPhotoPreview] = useState(null)
+    const [photos, setPhotos] = useState([])
+    const [photoPreviews, setPhotoPreviews] = useState([])
     const [errors, setErrors] = useState({})
     const [submitting, setSubmitting] = useState(false)
     const [submitted, setSubmitted] = useState(false)
@@ -28,16 +29,33 @@ export default function PartRequestButton() {
     }
 
     function handlePhotoChange(e) {
-        const file = e.target.files?.[0] ?? null
-        setPhoto(file)
-        setPhotoPreview(file ? URL.createObjectURL(file) : null)
+        const files = Array.from(e.target.files ?? []).slice(0, MAX_PHOTOS)
+        e.target.value = ''
+
+        setPhotos((current) => {
+            const next = [...current, ...files].slice(0, MAX_PHOTOS)
+            setPhotoPreviews((previews) => {
+                previews.forEach((url) => URL.revokeObjectURL(url))
+                return next.map((f) => URL.createObjectURL(f))
+            })
+            return next
+        })
+    }
+
+    function removePhoto(index) {
+        setPhotos((current) => current.filter((_, i) => i !== index))
+        setPhotoPreviews((current) => {
+            URL.revokeObjectURL(current[index])
+            return current.filter((_, i) => i !== index)
+        })
     }
 
     function close() {
         setOpen(false)
         setForm(EMPTY_FORM)
-        setPhoto(null)
-        setPhotoPreview(null)
+        photoPreviews.forEach((url) => URL.revokeObjectURL(url))
+        setPhotos([])
+        setPhotoPreviews([])
         setErrors({})
         setSubmitted(false)
     }
@@ -50,11 +68,15 @@ export default function PartRequestButton() {
         if (!form.customer_phone.trim()) e.customer_phone = 'Le téléphone est requis.'
         else if (form.customer_phone.length > 30) e.customer_phone = '30 caractères maximum.'
 
+        if (form.vin.trim() && form.vin.trim().length !== 17)
+            e.vin = `Le VIN doit comporter exactement 17 caractères (${form.vin.trim().length}/17 actuellement).`
+
         if (!form.message.trim()) e.message = 'Décrivez la pièce recherchée.'
         else if (form.message.length > 2000) e.message = '2000 caractères maximum.'
 
-        if (!photo) e.photo = 'Une photo de la pièce est requise.'
-        else if (photo.size > 8 * 1024 * 1024) e.photo = 'La photo ne doit pas dépasser 8 Mo.'
+        if (photos.length === 0) e.photo = 'Au moins une photo de la pièce est requise.'
+        else if (photos.length > MAX_PHOTOS) e.photo = `${MAX_PHOTOS} photos maximum.`
+        else if (photos.some((p) => p.size > 8 * 1024 * 1024)) e.photo = 'Chaque photo ne doit pas dépasser 8 Mo.'
 
         setErrors(e)
         return Object.keys(e).length === 0
@@ -67,13 +89,14 @@ export default function PartRequestButton() {
         setSubmitting(true)
 
         try {
-            const photo_path = await storePartRequestPhoto(photo)
+            const photo_paths = await storePartRequestPhotos(photos)
 
             const { error } = await supabase.from('part_requests').insert({
                 customer_name: form.customer_name,
                 customer_phone: form.customer_phone,
+                vin: form.vin.trim() || null,
                 message: form.message,
-                photo_path,
+                photo_paths,
             })
 
             if (error) throw error
@@ -139,7 +162,7 @@ export default function PartRequestButton() {
                             <>
                                 <h3 className="mb-2">Avez-vous cette pièce ?</h3>
                                 <p className="text-sm text-neutral-600 mb-5">
-                                    Joignez une photo de la pièce recherchée et décrivez votre besoin — notre équipe
+                                    Joignez une ou plusieurs photos de la pièce recherchée et décrivez votre besoin — notre équipe
                                     vérifie la disponibilité et vous recontacte.
                                 </p>
 
@@ -169,6 +192,27 @@ export default function PartRequestButton() {
                                     </div>
 
                                     <div className="field">
+                                        <div className="flex items-baseline justify-between gap-2">
+                                            <label htmlFor="pr_vin">VIN / N° de châssis (optionnel, mais recommandé)</label>
+                                            <span className={`text-xs font-bold ${form.vin.trim().length === 17 ? 'text-accent' : 'text-neutral-400'}`}>
+                                                {form.vin.trim().length}/17
+                                            </span>
+                                        </div>
+                                        <input
+                                            id="pr_vin"
+                                            className="input"
+                                            value={form.vin}
+                                            onChange={(e) => set('vin', e.target.value)}
+                                            maxLength={17}
+                                        />
+                                        <p className="text-xs text-neutral-500 mt-1">
+                                            S'il est renseigné, le VIN doit comporter exactement 17 caractères — il
+                                            nous permet de confirmer plus vite la compatibilité de la pièce.
+                                        </p>
+                                        {errors.vin && <p className="text-sm text-red-600 mt-1">{errors.vin}</p>}
+                                    </div>
+
+                                    <div className="field">
                                         <label htmlFor="pr_message">Décrivez la pièce recherchée *</label>
                                         <textarea
                                             id="pr_message"
@@ -183,18 +227,43 @@ export default function PartRequestButton() {
                                     </div>
 
                                     <div className="field">
-                                        <label htmlFor="pr_photo">Photo de la pièce *</label>
+                                        <label htmlFor="pr_photo">Photos de la pièce * ({photos.length}/{MAX_PHOTOS})</label>
                                         <input
                                             id="pr_photo"
                                             type="file"
                                             className="input"
                                             accept="image/*"
+                                            multiple
                                             onChange={handlePhotoChange}
-                                            required
+                                            disabled={photos.length >= MAX_PHOTOS}
+                                            required={photos.length === 0}
                                         />
+                                        <p className="text-xs text-neutral-500 mt-1">
+                                            Jusqu'à {MAX_PHOTOS} photos. Pour une identification plus fiable, ajoutez
+                                            si possible : la pièce elle-même, la partie concernée sur le véhicule, et
+                                            le véhicule complet.
+                                        </p>
                                         {errors.photo && <p className="text-sm text-red-600 mt-1">{errors.photo}</p>}
-                                        {photoPreview && (
-                                            <img src={photoPreview} alt="Aperçu" className="mt-3 w-full max-w-[160px] aspect-square object-cover" />
+                                        {photoPreviews.length > 0 && (
+                                            <div className="mt-3 flex flex-wrap gap-3">
+                                                {photoPreviews.map((url, i) => (
+                                                    <div key={url} className="relative">
+                                                        <img
+                                                            src={url}
+                                                            alt={`Aperçu ${i + 1}`}
+                                                            className="w-20 h-20 object-cover"
+                                                        />
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => removePhoto(i)}
+                                                            aria-label="Retirer cette photo"
+                                                            className="absolute -top-2 -right-2 w-5 h-5 bg-ink text-white text-xs flex items-center justify-center rounded-full"
+                                                        >
+                                                            ×
+                                                        </button>
+                                                    </div>
+                                                ))}
+                                            </div>
                                         )}
                                     </div>
 

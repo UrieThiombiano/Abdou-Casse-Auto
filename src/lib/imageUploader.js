@@ -60,6 +60,10 @@ export async function storePartRequestPhoto(file) {
     return path
 }
 
+export async function storePartRequestPhotos(files) {
+    return Promise.all(files.map((file) => storePartRequestPhoto(file)))
+}
+
 export function partRequestPhotoUrl(path) {
     return supabase.storage.from(PART_REQUEST_PHOTOS_BUCKET).getPublicUrl(path).data.publicUrl
 }

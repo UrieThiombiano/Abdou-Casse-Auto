@@ -127,13 +127,21 @@ export default function PartRequestsManager() {
                         <div className="card elev-sm p-5">
                             <h4 className="mb-4">Demande #{selected.id}</h4>
 
-                            {selected.photo_path && (
-                                <img
-                                    src={partRequestPhotoUrl(selected.photo_path)}
-                                    alt="Photo de la pièce"
-                                    className="w-full aspect-square object-cover mb-4"
-                                />
-                            )}
+                            {(() => {
+                                const paths = selected.photo_paths?.length ? selected.photo_paths : selected.photo_path ? [selected.photo_path] : []
+                                return paths.length > 0 ? (
+                                    <div className="grid grid-cols-2 gap-2 mb-4">
+                                        {paths.map((path) => (
+                                            <img
+                                                key={path}
+                                                src={partRequestPhotoUrl(path)}
+                                                alt="Photo de la pièce"
+                                                className="w-full aspect-square object-cover"
+                                            />
+                                        ))}
+                                    </div>
+                                ) : null
+                            })()}
 
                             <dl className="text-sm space-y-2 mb-5">
                                 <div>
@@ -148,6 +156,12 @@ export default function PartRequestsManager() {
                                         </a>
                                     </dd>
                                 </div>
+                                {selected.vin && (
+                                    <div>
+                                        <dt className="text-neutral-500">VIN</dt>
+                                        <dd className="font-mono">{selected.vin}</dd>
+                                    </div>
+                                )}
                                 <div>
                                     <dt className="text-neutral-500">Message</dt>
                                     <dd>{selected.message}</dd>
