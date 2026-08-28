@@ -1,7 +1,8 @@
 # Abdou Casse Auto — React + Vite + Supabase
 
-Réécriture complète du site (PHP/Laravel + Livewire d'origine, dans `../repo`)
-en **React + Vite** pour le front, et **Supabase** (Postgres + Auth + Storage)
+Réécriture complète du site (à l'origine PHP/Laravel + Livewire, désormais
+retirée — dernier état conservé sous le tag `php-legacy`) en **React + Vite**
+pour le front, et **Supabase** (Postgres + Auth + Storage)
 pour le backend. Objectif : un site 100% statique côté front, facile à
 déployer (Vercel, Netlify, Cloudflare Pages, GitHub Pages…), sans serveur PHP
 à maintenir.
