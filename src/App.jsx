@@ -25,6 +25,9 @@ const ManualOrderForm = lazy(() => import('./pages/admin/ManualOrderForm'))
 const PartRequestsManager = lazy(() => import('./pages/admin/PartRequestsManager'))
 const Proformas = lazy(() => import('./pages/admin/Proformas'))
 const ProformaForm = lazy(() => import('./pages/admin/ProformaForm'))
+const RepairsManager = lazy(() => import('./pages/admin/RepairsManager'))
+const RepairTicketForm = lazy(() => import('./pages/admin/RepairTicketForm'))
+const RepairTicketDetail = lazy(() => import('./pages/admin/RepairTicketDetail'))
 
 function AdminFallback() {
     return <div className="min-h-screen flex items-center justify-center text-neutral-500">Chargement…</div>
@@ -60,6 +63,9 @@ export default function App() {
                                 <Route path="/admin/carnet-de-commandes/nouvelle" element={<ManualOrderForm />} />
                                 <Route path="/admin/carnet-de-commandes/:id" element={<ManualOrderForm />} />
                                 <Route path="/admin/demandes" element={<PartRequestsManager />} />
+                                <Route path="/admin/reparations" element={<RepairsManager />} />
+                                <Route path="/admin/reparations/nouveau" element={<RepairTicketForm />} />
+                                <Route path="/admin/reparations/:id" element={<RepairTicketDetail />} />
                                 <Route path="/admin/proformas" element={<Proformas />} />
                                 <Route path="/admin/proformas/nouvelle" element={<ProformaForm />} />
                                 <Route path="/admin/proformas/:id" element={<ProformaForm />} />

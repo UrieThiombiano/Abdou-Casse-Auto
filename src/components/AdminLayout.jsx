@@ -14,6 +14,7 @@ import {
     IconOrdersOnline,
     IconPartRequests,
     IconProforma,
+    IconRepairs,
 } from './AdminIcons'
 
 const NAV_ITEMS = [
@@ -22,6 +23,7 @@ const NAV_ITEMS = [
     { to: '/admin/commandes', label: 'Commandes en ligne', icon: IconOrdersOnline },
     { to: '/admin/carnet-de-commandes', label: 'Carnet de commandes', icon: IconOrderBook },
     { to: '/admin/demandes', label: 'Demandes de pièces', icon: IconPartRequests },
+    { to: '/admin/reparations', label: 'Réparations', icon: IconRepairs },
     { to: '/admin/proformas', label: 'Proforma', icon: IconProforma },
 ]
 

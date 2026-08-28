@@ -78,6 +78,14 @@ export function IconProforma(props) {
     )
 }
 
+export function IconRepairs(props) {
+    return (
+        <Icon {...props}>
+            <path d="M14.7 6.3a4 4 0 0 1-5.4 5.4L4 17l3 3 5.3-5.3a4 4 0 0 1 5.4-5.4l-2.5 2.5-2-2Z" />
+        </Icon>
+    )
+}
+
 export function IconChevronLeft(props) {
     return (
         <Icon {...props}>
