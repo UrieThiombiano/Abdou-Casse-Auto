@@ -53,7 +53,7 @@ export default function AdminLayout() {
                 } ${mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
             >
                 <div className={`flex items-center gap-3 px-4 h-16 border-b border-neutral-800 shrink-0 ${collapsed ? 'lg:justify-center lg:px-0' : ''}`}>
-                    <img src="/img/logo.jpg" alt={company.name} className="w-9 h-9 rounded-full object-cover shrink-0" />
+                    <img src="/img/logo.png" alt={company.name} className="w-9 h-9 rounded-full object-cover shrink-0" />
                     <span className={`font-extrabold text-sm leading-tight ${collapsed ? 'lg:hidden' : ''}`}>
                         ABDOU CASSE AUTO
                         <br />

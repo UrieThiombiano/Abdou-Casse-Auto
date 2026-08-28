@@ -16,7 +16,7 @@ export default function PublicLayout() {
             <header className="sticky top-0 z-40 bg-white border-b border-neutral-200">
                 <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
                     <Link to="/" className="flex items-center gap-3 shrink-0">
-                        <img src="/img/logo.jpg" alt={company.name} className="w-10 h-10 rounded-full object-cover" />
+                        <img src="/img/logo.png" alt={company.name} className="w-10 h-10 rounded-full object-cover" />
                         <span className="font-sans font-extrabold tracking-tight leading-none hidden sm:block">
                             ABDOU CASSE
                             <br />
@@ -92,7 +92,7 @@ export default function PublicLayout() {
                 <div className="max-w-6xl mx-auto px-4 py-12 grid gap-8 sm:grid-cols-3">
                     <div>
                         <div className="flex items-center gap-3 mb-3">
-                            <img src="/img/logo.jpg" alt={company.name} className="w-10 h-10 rounded-full object-cover" />
+                            <img src="/img/logo.png" alt={company.name} className="w-10 h-10 rounded-full object-cover" />
                             <span className="font-extrabold">ABDOU CASSE AUTO</span>
                         </div>
                         <p className="text-sm text-neutral-400">
