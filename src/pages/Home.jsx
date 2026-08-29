@@ -169,24 +169,25 @@ export default function Home() {
             </section>
 
             {/* GARANTIE — PIECES AUTHENTIQUES */}
-            <section className="relative overflow-hidden text-white">
-                <div className="absolute inset-0">
-                    <img
-                        src="/img/catalogue-neuf.jpg"
-                        alt="Atelier et pièces détachées rangées et contrôlées sur étagères"
-                        className="kb-image w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-neutral-900/78" />
-                    <div className="absolute inset-0 bg-gradient-to-b from-neutral-900/70 via-neutral-900/25 to-neutral-900/70" />
-                </div>
+            <section className="px-4 pt-12 pb-16 sm:pt-16 sm:pb-24">
+                <div className="relative overflow-hidden max-w-6xl mx-auto text-white shadow-2xl border-t-4 border-accent">
+                    <div className="absolute inset-0">
+                        <img
+                            src="/img/catalogue-neuf.jpg"
+                            alt="Atelier et pièces détachées rangées et contrôlées sur étagères"
+                            className="kb-image w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 bg-neutral-900/78" />
+                        <div className="absolute inset-0 bg-gradient-to-b from-neutral-900/70 via-neutral-900/25 to-neutral-900/70" />
+                    </div>
 
-                <motion.div
-                    className="relative max-w-2xl mx-auto px-4 py-24 sm:py-32 text-center"
-                    variants={bandContainer}
-                    initial="hidden"
-                    whileInView="show"
-                    viewport={{ once: true, amount: 0.4 }}
-                >
+                    <motion.div
+                        className="relative max-w-2xl mx-auto px-6 py-20 sm:py-28 text-center"
+                        variants={bandContainer}
+                        initial="hidden"
+                        whileInView="show"
+                        viewport={{ once: true, amount: 0.4 }}
+                    >
                     <motion.span variants={bandChild} className="tag-accent inline-flex mb-7">
                         La différence Abdou Casse
                     </motion.span>
@@ -243,7 +244,8 @@ export default function Home() {
                             </svg>
                         </Link>
                     </motion.div>
-                </motion.div>
+                    </motion.div>
+                </div>
             </section>
 
             {/* CARTES DE NAVIGATION */}
