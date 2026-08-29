@@ -220,7 +220,7 @@ export default function Home() {
                                 }}
                             />
                         </span>
-                        . Pas de fausses pièces. Pas de copies.
+                        . Pas de fausses pièces.
                     </motion.p>
 
                     <motion.div variants={bandChild}>
