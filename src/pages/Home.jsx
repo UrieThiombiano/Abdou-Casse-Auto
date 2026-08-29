@@ -152,7 +152,7 @@ export default function Home() {
             </section>
 
             {/* GARANTIE — PIECES AUTHENTIQUES */}
-            <section className="px-4 py-24 sm:py-32">
+            <section className="bg-accent-100 px-4 py-24 sm:py-32">
                 <Reveal className="max-w-2xl mx-auto text-center">
                     <span className="tag-accent inline-flex mb-7">La différence Abdou Casse</span>
                     <p className="text-3xl sm:text-4xl font-extrabold leading-[1.15] text-ink mb-6">
