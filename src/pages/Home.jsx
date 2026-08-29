@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { supabase } from '../lib/supabaseClient'
 import { company, telHref } from '../lib/company'
 import { publicTitle, useDocumentTitle } from '../lib/title'
@@ -12,6 +12,20 @@ import BrandLogo from '../components/BrandLogo'
 
 const MotionLink = motion(Link)
 
+// Entrée orchestrée de la bande « garantie » : les éléments montent l'un après l'autre.
+const bandContainer = {
+    hidden: {},
+    show: { transition: { staggerChildren: 0.13, delayChildren: 0.06 } },
+}
+const bandItem = {
+    hidden: { opacity: 0, y: 24 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
+}
+const bandItemReduced = {
+    hidden: { opacity: 0 },
+    show: { opacity: 1, transition: { duration: 0.4 } },
+}
+
 const REASSURANCE_ITEMS = [
     { label: 'Garantie d’essai', text: 'Pièces authentiques, testées — jamais de copies' },
     { label: 'Disponible 24h/24', text: 'Une équipe joignable à toute heure pour votre commande' },
@@ -21,6 +35,9 @@ const REASSURANCE_ITEMS = [
 
 export default function Home() {
     useDocumentTitle(publicTitle('Accueil'))
+
+    const reduceMotion = useReducedMotion()
+    const bandChild = reduceMotion ? bandItemReduced : bandItem
 
     const [brands, setBrands] = useState([])
     const [brand, setBrand] = useState('')
@@ -152,22 +169,81 @@ export default function Home() {
             </section>
 
             {/* GARANTIE — PIECES AUTHENTIQUES */}
-            <section className="bg-accent-100 px-4 py-24 sm:py-32">
-                <Reveal className="max-w-2xl mx-auto text-center">
-                    <span className="tag-accent inline-flex mb-7">La différence Abdou Casse</span>
-                    <p className="text-3xl sm:text-4xl font-extrabold leading-[1.15] text-ink mb-6">
+            <section className="relative overflow-hidden text-white">
+                <div className="absolute inset-0">
+                    <img
+                        src="/img/catalogue-neuf.jpg"
+                        alt="Atelier et pièces détachées rangées et contrôlées sur étagères"
+                        className="kb-image w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-neutral-900/78" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-neutral-900/70 via-neutral-900/25 to-neutral-900/70" />
+                </div>
+
+                <motion.div
+                    className="relative max-w-2xl mx-auto px-4 py-24 sm:py-32 text-center"
+                    variants={bandContainer}
+                    initial="hidden"
+                    whileInView="show"
+                    viewport={{ once: true, amount: 0.4 }}
+                >
+                    <motion.span variants={bandChild} className="tag-accent inline-flex mb-7">
+                        La différence Abdou Casse
+                    </motion.span>
+
+                    <motion.p
+                        variants={bandChild}
+                        className="text-3xl sm:text-4xl font-extrabold leading-[1.15] text-balance mb-6 drop-shadow-[0_2px_14px_rgba(0,0,0,0.55)]"
+                    >
                         Fatigué des fausses pièces, des copies,
                         <br className="hidden sm:block" /> des pièces qui ne tiennent pas&nbsp;?
-                    </p>
-                    <p className="text-lg sm:text-xl text-neutral-600 leading-relaxed mb-9">
+                    </motion.p>
+
+                    <motion.p
+                        variants={bandChild}
+                        className="text-lg sm:text-xl text-neutral-200 leading-relaxed mb-9 drop-shadow-[0_1px_10px_rgba(0,0,0,0.5)]"
+                    >
                         Chez nous, des pièces de qualité et authentiques, livrées avec une{' '}
-                        <span className="text-accent font-bold">garantie d’essai</span>. Pas de fausses
-                        pièces. Pas de copies.
-                    </p>
-                    <Link to="/commander" onClick={() => trackEvent('order_click')} className="btn-primary">
-                        Commander une pièce fiable
-                    </Link>
-                </Reveal>
+                        <span className="relative inline-block font-bold text-white">
+                            garantie d’essai
+                            <motion.span
+                                aria-hidden="true"
+                                className="absolute -bottom-1 left-0 h-[3px] w-full bg-accent origin-left"
+                                initial={{ scaleX: reduceMotion ? 1 : 0 }}
+                                whileInView={{ scaleX: 1 }}
+                                viewport={{ once: true, amount: 0.9 }}
+                                transition={{
+                                    delay: reduceMotion ? 0 : 0.9,
+                                    duration: 0.55,
+                                    ease: [0.22, 1, 0.36, 1],
+                                }}
+                            />
+                        </span>
+                        . Pas de fausses pièces. Pas de copies.
+                    </motion.p>
+
+                    <motion.div variants={bandChild}>
+                        <Link
+                            to="/commander"
+                            onClick={() => trackEvent('order_click')}
+                            className="btn-primary group"
+                        >
+                            Commander une pièce fiable
+                            <svg
+                                className="w-4 h-4 transition-transform group-hover:translate-x-1"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2.5"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                aria-hidden="true"
+                            >
+                                <path d="M5 12h14M13 6l6 6-6 6" />
+                            </svg>
+                        </Link>
+                    </motion.div>
+                </motion.div>
             </section>
 
             {/* CARTES DE NAVIGATION */}
