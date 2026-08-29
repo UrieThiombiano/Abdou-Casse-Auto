@@ -13,10 +13,10 @@ import BrandLogo from '../components/BrandLogo'
 const MotionLink = motion(Link)
 
 const REASSURANCE_ITEMS = [
+    { label: 'Garantie d’essai', text: 'Pièces authentiques, testées — jamais de copies' },
     { label: 'Disponible 24h/24', text: 'Une équipe joignable à toute heure pour votre commande' },
     { label: 'Paiement livraison', text: 'Aucun paiement en ligne requis' },
     { label: 'Livraison Ouaga', text: company.deliveryZone },
-    { label: 'Téléphone', text: company.phones[0] },
 ]
 
 export default function Home() {
@@ -148,6 +148,30 @@ export default function Home() {
                             {company.phones[0]}
                         </a>
                     </motion.div>
+                </div>
+            </section>
+
+            {/* GARANTIE — PIECES AUTHENTIQUES */}
+            <section className="bg-accent text-white">
+                <div className="max-w-4xl mx-auto px-4 py-14 sm:py-16 text-center">
+                    <Reveal>
+                        <p className="text-2xl sm:text-3xl font-extrabold leading-tight mb-4">
+                            Fatigué des fausses pièces, des copies, des pièces qui ne tiennent pas&nbsp;?
+                        </p>
+                        <p className="text-lg sm:text-xl text-white/95 max-w-2xl mx-auto mb-7">
+                            Chez <span className="font-extrabold">Abdou Casse Auto</span>, des pièces de qualité et
+                            authentiques, livrées avec une{' '}
+                            <span className="underline decoration-2 underline-offset-4">garantie d’essai</span>.
+                            Pas de fausses pièces. Pas de copies.
+                        </p>
+                        <Link
+                            to="/commander"
+                            onClick={() => trackEvent('order_click')}
+                            className="btn-secondary !bg-white !text-accent !border-white hover:!bg-white/90 inline-flex"
+                        >
+                            Commander une pièce fiable
+                        </Link>
+                    </Reveal>
                 </div>
             </section>
 

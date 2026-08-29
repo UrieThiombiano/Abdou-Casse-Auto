@@ -162,8 +162,11 @@ export default function OrderForm() {
             <Reveal as="h1" className="mb-2">
                 Commander une pièce
             </Reveal>
-            <p className="text-neutral-600 mb-6">
+            <p className="text-neutral-600 mb-3">
                 Aucun paiement en ligne n'est requis. Le règlement se fait uniquement à la livraison.
+            </p>
+            <p className="border-l-4 border-accent bg-accent/5 px-4 py-3 text-sm text-neutral-700 mb-6">
+                {company.guarantee}
             </p>
 
             {selectedListing && (
