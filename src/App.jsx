@@ -28,6 +28,7 @@ const ProformaForm = lazy(() => import('./pages/admin/ProformaForm'))
 const RepairsManager = lazy(() => import('./pages/admin/RepairsManager'))
 const RepairTicketForm = lazy(() => import('./pages/admin/RepairTicketForm'))
 const RepairTicketDetail = lazy(() => import('./pages/admin/RepairTicketDetail'))
+const Whatsapp = lazy(() => import('./pages/admin/Whatsapp'))
 
 function AdminFallback() {
     return <div className="min-h-screen flex items-center justify-center text-neutral-500">Chargement…</div>
@@ -69,6 +70,7 @@ export default function App() {
                                 <Route path="/admin/proformas" element={<Proformas />} />
                                 <Route path="/admin/proformas/nouvelle" element={<ProformaForm />} />
                                 <Route path="/admin/proformas/:id" element={<ProformaForm />} />
+                                <Route path="/admin/whatsapp" element={<Whatsapp />} />
                             </Route>
                         </Route>
                     </Routes>

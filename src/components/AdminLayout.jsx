@@ -15,6 +15,7 @@ import {
     IconPartRequests,
     IconProforma,
     IconRepairs,
+    IconWhatsapp,
 } from './AdminIcons'
 
 const NAV_ITEMS = [
@@ -25,6 +26,7 @@ const NAV_ITEMS = [
     { to: '/admin/demandes', label: 'Demandes de pièces', icon: IconPartRequests },
     { to: '/admin/reparations', label: 'Réparations', icon: IconRepairs },
     { to: '/admin/proformas', label: 'Proforma', icon: IconProforma },
+    { to: '/admin/whatsapp', label: 'Chatbot WhatsApp', icon: IconWhatsapp },
 ]
 
 const COLLAPSE_KEY = 'admin-sidebar-collapsed'
