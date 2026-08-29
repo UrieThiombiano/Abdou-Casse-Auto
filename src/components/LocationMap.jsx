@@ -2,13 +2,14 @@ import { company } from '../lib/company'
 import { trackEvent } from '../lib/analytics'
 
 export default function LocationMap({ className = 'aspect-[4/3]' }) {
-    const query = encodeURIComponent(`${company.name}, ${company.city}`)
+    // Point exact de la boutique (coordonnees), pas une recherche par nom.
+    const query = encodeURIComponent(company.coordinates)
 
     return (
         <div className={`relative overflow-hidden border border-neutral-200 ${className}`}>
             <iframe
                 title={`Localisation — ${company.name}`}
-                src={`https://www.google.com/maps?q=${query}&output=embed`}
+                src={`https://www.google.com/maps?q=${query}&z=17&output=embed`}
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 className="absolute inset-0 w-full h-full"

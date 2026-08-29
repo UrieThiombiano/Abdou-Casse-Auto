@@ -12,7 +12,9 @@ export const company = {
     whatsappNumber: '22676942290',
     whatsappDisplay: '76 94 22 90',
     deliveryZone: 'Ouagadougou et environs',
-    mapsUrl: 'https://maps.app.goo.gl/3RYMiXAhtHuDLkRHA',
+    mapsUrl: 'https://maps.app.goo.gl/oknjfdGeHsaW4Qso9',
+    // Coordonnees exactes de la boutique (pour la carte integree).
+    coordinates: '12.34216,-1.5601202',
 }
 
 export function telHref(phone) {
