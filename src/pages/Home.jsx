@@ -152,27 +152,22 @@ export default function Home() {
             </section>
 
             {/* GARANTIE — PIECES AUTHENTIQUES */}
-            <section className="bg-accent text-white">
-                <div className="max-w-4xl mx-auto px-4 py-14 sm:py-16 text-center">
-                    <Reveal>
-                        <p className="text-2xl sm:text-3xl font-extrabold leading-tight mb-4">
-                            Fatigué des fausses pièces, des copies, des pièces qui ne tiennent pas&nbsp;?
-                        </p>
-                        <p className="text-lg sm:text-xl text-white/95 max-w-2xl mx-auto mb-7">
-                            Chez <span className="font-extrabold">Abdou Casse Auto</span>, des pièces de qualité et
-                            authentiques, livrées avec une{' '}
-                            <span className="underline decoration-2 underline-offset-4">garantie d’essai</span>.
-                            Pas de fausses pièces. Pas de copies.
-                        </p>
-                        <Link
-                            to="/commander"
-                            onClick={() => trackEvent('order_click')}
-                            className="btn-secondary !bg-white !text-accent !border-white hover:!bg-white/90 inline-flex"
-                        >
-                            Commander une pièce fiable
-                        </Link>
-                    </Reveal>
-                </div>
+            <section className="px-4 py-24 sm:py-32">
+                <Reveal className="max-w-2xl mx-auto text-center">
+                    <span className="tag-accent inline-flex mb-7">La différence Abdou Casse</span>
+                    <p className="text-3xl sm:text-4xl font-extrabold leading-[1.15] text-ink mb-6">
+                        Fatigué des fausses pièces, des copies,
+                        <br className="hidden sm:block" /> des pièces qui ne tiennent pas&nbsp;?
+                    </p>
+                    <p className="text-lg sm:text-xl text-neutral-600 leading-relaxed mb-9">
+                        Chez nous, des pièces de qualité et authentiques, livrées avec une{' '}
+                        <span className="text-accent font-bold">garantie d’essai</span>. Pas de fausses
+                        pièces. Pas de copies.
+                    </p>
+                    <Link to="/commander" onClick={() => trackEvent('order_click')} className="btn-primary">
+                        Commander une pièce fiable
+                    </Link>
+                </Reveal>
             </section>
 
             {/* CARTES DE NAVIGATION */}
