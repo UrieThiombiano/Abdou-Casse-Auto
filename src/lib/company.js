@@ -12,6 +12,8 @@ export const company = {
     whatsappNumber: '22676942290',
     whatsappDisplay: '76 94 22 90',
     deliveryZone: 'Ouagadougou et environs',
+    hours: 'Lundi à vendredi : 8h – 17h · Samedi : 8h – 15h · Dimanche : fermé',
+    hoursNote: 'Dépannage 24h/24 et commande en ligne à toute heure',
     mapsUrl: 'https://maps.app.goo.gl/oknjfdGeHsaW4Qso9',
     // Coordonnees exactes de la boutique (pour la carte integree).
     coordinates: '12.34216,-1.5601202',

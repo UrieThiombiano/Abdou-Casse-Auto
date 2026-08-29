@@ -75,10 +75,10 @@ export default function Contact() {
                     <p className="text-neutral-700 mb-1">
                         <span className="font-bold">Adresse :</span> {company.city}
                     </p>
-                    <p className="text-neutral-700 mb-6">
-                        <span className="font-bold">Horaires :</span> Service de dépannage 24h/24 — vente de pièces aux
-                        heures ouvrées
+                    <p className="text-neutral-700 mb-1">
+                        <span className="font-bold">Horaires :</span> {company.hours}
                     </p>
+                    <p className="text-neutral-500 text-sm mb-6">{company.hoursNote}</p>
 
                     <WhatsappLink className="btn-primary" />
 
