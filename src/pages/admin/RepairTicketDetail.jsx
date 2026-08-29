@@ -131,6 +131,12 @@ export default function RepairTicketDetail() {
         load()
     }
 
+    async function handleDelete() {
+        if (!window.confirm(`Supprimer le ticket ${ticket.ticket_number} et toutes ses infos (lignes, paiements, PDF) ?`)) return
+        await supabase.from('repair_tickets').delete().eq('id', id)
+        navigate('/admin/reparations', { replace: true })
+    }
+
     async function handleDownload() {
         setDownloading(true)
         try {
@@ -181,6 +187,9 @@ export default function RepairTicketDetail() {
                             Réouvrir le ticket
                         </button>
                     )}
+                    <button onClick={handleDelete} className="btn-ghost !text-red-600">
+                        Supprimer
+                    </button>
                 </div>
             </div>
 

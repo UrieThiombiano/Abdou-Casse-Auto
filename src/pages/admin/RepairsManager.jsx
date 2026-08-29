@@ -29,6 +29,12 @@ export default function RepairsManager() {
         })
     }, [filterStatus])
 
+    async function handleDelete(ticket) {
+        if (!window.confirm(`Supprimer le ticket ${ticket.ticket_number} et toutes ses infos (lignes, paiements, PDF) ?`)) return
+        await supabase.from('repair_tickets').delete().eq('id', ticket.id)
+        setTickets((list) => list.filter((t) => t.id !== ticket.id))
+    }
+
     return (
         <div>
             <div className="flex items-center justify-between mb-6 gap-4 flex-wrap">
@@ -99,7 +105,10 @@ export default function RepairsManager() {
                                         <td className="text-right whitespace-nowrap">
                                             <Link to={`/admin/reparations/${t.id}`} className="btn-ghost">
                                                 Voir
-                                            </Link>
+                                            </Link>{' '}
+                                            <button onClick={() => handleDelete(t)} className="btn-ghost !text-red-600">
+                                                Supprimer
+                                            </button>
                                         </td>
                                     </tr>
                                 )
