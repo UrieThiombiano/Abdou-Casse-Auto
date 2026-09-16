@@ -225,6 +225,7 @@ export default function OrderForm() {
                     />
                     <p className="text-xs text-neutral-500 mt-1">
                         Ce numéro identifie formellement le véhicule et conditionne la conformité de la pièce livrée.
+                        Il se trouve sur la carte grise de votre véhicule.
                         Merci de le vérifier scrupuleusement avant l'envoi : toute erreur de saisie invalidera la
                         commande.
                     </p>

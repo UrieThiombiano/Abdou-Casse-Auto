@@ -5,6 +5,7 @@ export const company = {
     name: 'Abdou Casse Auto',
     tagline: 'Pièces auto neuves & occasion, disponibles 24h/24',
     city: 'Ouagadougou, Burkina Faso',
+    address: 'Ouagadougou, Gounghin, juste derrière le cimetière',
     email: 'Kaborekaka@gmail.com',
     // Par ordre de preference.
     phones: ['70 44 85 39', '78 83 58 83', '78 80 85 16', '67 99 18 91'],

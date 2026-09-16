@@ -7,6 +7,7 @@ import { publicTitle, useDocumentTitle } from '../lib/title'
 import { trackEvent } from '../lib/analytics'
 import Reveal from '../components/Reveal'
 import LocationMap from '../components/LocationMap'
+import ShopPhoto from '../components/ShopPhoto'
 import Typewriter from '../components/Typewriter'
 import BrandLogo from '../components/BrandLogo'
 
@@ -70,7 +71,7 @@ export default function Home() {
                     <div className="absolute inset-0 bg-gradient-to-t from-neutral-900/50 via-transparent to-transparent" />
                 </div>
 
-                <div className="relative max-w-6xl mx-auto px-4 py-20 sm:py-28 grid lg:grid-cols-3 gap-10 items-center">
+                <div className="relative max-w-6xl mx-auto px-4 py-12 sm:py-20 lg:py-28 grid lg:grid-cols-3 gap-8 lg:gap-10 items-center">
                     <div className="lg:col-span-2">
                         <motion.span
                             initial={{ opacity: 0, y: 12 }}
@@ -83,7 +84,7 @@ export default function Home() {
 
                         <Typewriter
                             as="h1"
-                            className="text-white text-4xl sm:text-5xl mb-4"
+                            className="text-white text-3xl sm:text-4xl lg:text-5xl mb-4"
                             text="Trouvez exactement la pièce qui manque à votre véhicule"
                         />
 
@@ -182,7 +183,7 @@ export default function Home() {
                     </div>
 
                     <motion.div
-                        className="relative max-w-2xl mx-auto px-6 py-20 sm:py-28 text-center"
+                        className="relative max-w-2xl mx-auto px-6 py-14 sm:py-20 lg:py-28 text-center"
                         variants={bandContainer}
                         initial="hidden"
                         whileInView="show"
@@ -392,10 +393,11 @@ export default function Home() {
                     <div>
                         <span className="tag-accent mb-4 inline-flex">Nous trouver</span>
                         <h2 className="mb-4">Notre atelier vous accueille à {company.city.split(',')[0]}</h2>
-                        <p className="text-neutral-600 mb-6 max-w-md">
+                        <p className="text-neutral-600 mb-2 max-w-md">
                             Passez nous voir pour être conseillé en personne, ou contactez-nous avant de vous
                             déplacer pour vérifier la disponibilité de votre pièce.
                         </p>
+                        <p className="text-neutral-700 font-bold mb-6">{company.address}</p>
                         <div className="flex flex-wrap gap-3">
                             <a
                                 href={company.mapsUrl}
@@ -411,8 +413,13 @@ export default function Home() {
                             </a>
                         </div>
                     </div>
-                    <LocationMap className="aspect-[4/3]" />
+                    <ShopPhoto className="aspect-[4/3]" />
                 </Reveal>
+            </section>
+
+            {/* CARTE PLEINE LARGEUR */}
+            <section className="relative w-screen left-1/2 -translate-x-1/2">
+                <LocationMap className="aspect-[21/9] md:aspect-[3/1]" />
             </section>
         </>
     )

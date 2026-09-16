@@ -77,7 +77,7 @@ export default function ProductDetail() {
                                 className="w-full aspect-[4/3] object-cover mb-3"
                             />
                             {photos.length > 1 && (
-                                <div className="grid grid-cols-4 gap-2">
+                                <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
                                     {photos.map((photo, i) => (
                                         <button key={photo.id} type="button" onClick={() => setActive(i)}>
                                             <img

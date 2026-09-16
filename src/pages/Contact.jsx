@@ -73,7 +73,7 @@ export default function Contact() {
                     </ul>
 
                     <p className="text-neutral-700 mb-1">
-                        <span className="font-bold">Adresse :</span> {company.city}
+                        <span className="font-bold">Adresse :</span> {company.address}
                     </p>
                     <p className="text-neutral-700 mb-1">
                         <span className="font-bold">Horaires :</span> {company.hours}
